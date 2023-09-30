@@ -1,0 +1,40 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:1.25
+    ports:
+      - 80:80
+    volumes:
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+
+  database:
+    image: mysql:8.1
+    ports:
+      - 3306:3306
+    volumes:
+      - ./etc/mysql/conf.d:/etc/mysql/conf.d
+      - ./etc/mysql/dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  backend:
+    image: golang:1.20
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - database
+
+  frontend:
+    image: node:18
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+volumes:
+  dbdata:
