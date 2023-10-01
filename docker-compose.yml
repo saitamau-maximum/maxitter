@@ -7,6 +7,7 @@ services:
     volumes:
       - ./etc/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
+      - backend
       - frontend
 
   database:
@@ -24,6 +25,9 @@ services:
 
   backend:
     image: golang:1.20
+    build:
+      context: ./backend
+      target: dev
     volumes:
       - ./backend:/app
     depends_on:
@@ -31,8 +35,12 @@ services:
 
   frontend:
     image: node:18
+    build:
+      context: ./frontend
+      target: dev
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     depends_on:
       - backend
 
