@@ -49,19 +49,12 @@ func migrate() {
 	db := connectDB()
 	defer db.Close()
 
-	files, err := os.ReadDir(SQL_PATH)
-	if err != nil {
-		panic(err)
+	queries := []string{
+		CREATE_POSTS_TABLE,
 	}
 
-	for _, file := range files {
-		log.Println("migrate: " + file.Name())
-		data, err := os.ReadFile(SQL_PATH + "/" + file.Name())
-		if err != nil {
-			panic(err)
-		}
-		_, err = db.Exec(string(data))
-		if err != nil {
+	for _, query := range queries {
+		if _, err := db.Exec(query); err != nil {
 			panic(err)
 		}
 	}
