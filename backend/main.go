@@ -2,16 +2,24 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
-	DB *sqlx.DB
+	DB     *sqlx.DB
+	Logger echo.Logger
 }
+
+var (
+	SQL_PATH = "./sql"
+)
 
 func getEnv(key, fallback string) string {
 	value, ok := os.LookupEnv(key)
@@ -36,14 +44,85 @@ func connectDB() *sqlx.DB {
 	return con
 }
 
+func migrate() {
+	log.Println("migrate start")
+	db := connectDB()
+	defer db.Close()
+
+	files, err := os.ReadDir(SQL_PATH)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, file := range files {
+		log.Println("migrate: " + file.Name())
+		data, err := os.ReadFile(SQL_PATH + "/" + file.Name())
+		if err != nil {
+			panic(err)
+		}
+		_, err = db.Exec(string(data))
+		if err != nil {
+			panic(err)
+		}
+	}
+	log.Println("migrate end")
+}
+
+func init() {
+	migrate()
+}
+
 func main() {
 	e := echo.New()
-	h := &Handler{DB: connectDB()}
+	e.Debug = true
+	e.Logger.SetLevel(0)
+	db := connectDB()
+	defer db.Close()
+	h := &Handler{DB: db, Logger: e.Logger}
 	api := e.Group("/api")
-	api.GET("/hello", h.Hello)
+	api.GET("/posts", h.GetPosts)
+	api.POST("/posts", h.CreatePost)
+	api.GET("/health", func(c echo.Context) error {
+		e.Logger.Info("health check")
+		return c.JSON(200, "ok")
+	})
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
-func (h *Handler) Hello(c echo.Context) error {
-	return c.String(200, "Hello World")
+type Post struct {
+	ID        string `db:"id" json:"id"`
+	Body      string `db:"body" json:"body"`
+	CreatedAt string `db:"created_at" json:"created_at"`
+}
+
+func (h *Handler) GetPosts(c echo.Context) error {
+	posts := []Post{}
+	err := h.DB.Select(&posts, "SELECT * FROM posts")
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, posts)
+}
+
+func (h *Handler) CreatePost(c echo.Context) error {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	post := new(Post)
+	if err := c.Bind(post); err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	post.ID = id.String()
+	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+
+	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, post)
 }
