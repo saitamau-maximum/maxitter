@@ -50,7 +50,7 @@ func migrate() {
 	defer db.Close()
 
 	queries := []string{
-		CREATE_POSTS_TABLE,
+		POSTS_CREATE_TABLE,
 	}
 
 	for _, query := range queries {
@@ -90,7 +90,7 @@ type Post struct {
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	posts := []Post{}
-	err := h.DB.Select(&posts, "SELECT * FROM posts")
+	err := h.DB.Select(&posts, POSTS_SELECT_ALL)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
@@ -112,7 +112,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 	post.ID = id.String()
 	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
-	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
+	_, err = h.DB.Exec(POSTS_INSERT, post.ID, post.Body, post.CreatedAt)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
