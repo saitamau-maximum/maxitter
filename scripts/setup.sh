@@ -4,6 +4,13 @@ THIS_FILE_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "${THIS_FILE_DIR}/.." && pwd)"
 FRONT_DIR="${PROJECT_DIR}/frontend"
 BACK_DIR="${PROJECT_DIR}/backend"
+ENV_FILE="${PROJECT_DIR}/.env"
+
+if [ ! -f "${ENV_FILE}" ]; then
+    echo "環境変数ファイルが存在しません！"
+    echo "環境変数ファイルを作成してから再度実行してください。"
+    exit 1
+fi
 
 echo "フロントエンドのセットアップを開始します..."
 
