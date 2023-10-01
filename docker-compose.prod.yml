@@ -5,15 +5,13 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./etc/nginx/dev/conf.d:/etc/nginx/conf.d
+      - ./etc/nginx/prod/conf.d:/etc/nginx/conf.d
+      - ./frontend/dist:/var/www/html
     depends_on:
       - backend
-      - frontend
 
   database:
     image: mysql:8.1
-    ports:
-      - 3306:3306
     volumes:
       - ./etc/mysql/conf.d:/etc/mysql/conf.d
       - ./etc/mysql/dbdata:/var/lib/mysql
@@ -32,9 +30,7 @@ services:
     image: golang:1.20
     build:
       context: ./backend
-      target: dev
-    volumes:
-      - ./backend:/app
+      target: prod
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -48,12 +44,11 @@ services:
     image: node:18
     build:
       context: ./frontend
-      target: dev
+      target: builder
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    depends_on:
-      - backend
+    command: npm run build
 
 volumes:
   dbdata:
