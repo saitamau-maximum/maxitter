@@ -24,4 +24,7 @@ MaximumメンバーがWeb研究部の活動として、Twitterのようなマイ
 ### 最初
 
 1. リポジトリをクローンする `git clone https://github.com/saitamau-maximum/maxitter.git`
-2. `./scripts/setup.sh` でビルドしてコンテナを起動する
+2. `cd maxitter`でフォルダに移動
+3. `cp .env.example .env`で.envファイルを作成
+4. `.env`ファイルを自分の好きな名前やパスワードに書き換え
+5. `./scripts/setup.sh` でビルドしてコンテナを起動する
