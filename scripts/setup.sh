@@ -44,7 +44,7 @@ echo "バックエンドのセットアップが完了しました！"
 
 echo "Dockerのセットアップを開始します..."
 
-docker-compose build
-docker-compose up -d
+docker compose build
+docker compose up -d
 
 echo "Dockerのセットアップが完了しました！"
