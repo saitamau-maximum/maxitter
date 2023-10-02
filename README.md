@@ -24,4 +24,4 @@ MaximumメンバーがWeb研究部の活動として、Twitterのようなマイ
 ### 最初
 
 1. リポジトリをクローンする `git clone https://saitamau-maximum/maxitter.git`
-2. `docker compose up -d --build` でビルドしてコンテナを起動する
+2. `./scripts/setup.sh` でビルドしてコンテナを起動する
