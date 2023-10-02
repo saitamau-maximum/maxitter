@@ -53,6 +53,7 @@ func migrate() {
 	if err != nil {
 		panic(err)
 	}
+	log.Println("migrate files: ", files)
 
 	for _, file := range files {
 		log.Println("migrate: " + file.Name())
