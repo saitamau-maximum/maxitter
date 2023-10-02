@@ -13,8 +13,8 @@ MaximumメンバーがWeb研究部の活動として、Twitterのようなマイ
 ## 開発形態
 
 - ブランチモデル
-  - main (本番環境)
-  - develop (ステージング環境)
+  - production (本番環境)
+  - development (ステージング環境)
   - feat/xxx (機能追加)
   - fix/xxx (バグ修正)
   - hotfix/xxx (緊急バグ修正)
