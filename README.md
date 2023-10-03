@@ -37,6 +37,10 @@ MaximumメンバーがWeb研究部の活動として、Twitterのようなマイ
 
 `./scripts/start.sh` でコンテナを再開する
 
+### DBデータの削除
+
+`./scripts/reset-db.sh` でDBデータを削除する
+
 ### デプロイ
 
 `./scripts/deploy.sh` で本番環境にデプロイする
