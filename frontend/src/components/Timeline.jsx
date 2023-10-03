@@ -16,7 +16,7 @@ export const Timeline = ({ posts, isLoading, fetchPosts }) => {
       {posts.map((post) => (
         <Card key={post.id} sx={{ my: 2 }}>
           <CardContent>
-            <Typography variant="body1">{post.body}</Typography>
+            <Typography variant="body1">{post.body} {post.created_at}</Typography>
           </CardContent>
         </Card>
       ))}
