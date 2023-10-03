@@ -27,7 +27,7 @@ echo "Dockerを停止しました！"
 
 echo "DBデータを削除します..."
 
-sudo sudo rm -rf "${DB_DATA_DIR}"
+sudo rm -rf "${DB_DATA_DIR}"
 
 echo "DBデータを削除しました！"
 
