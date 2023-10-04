@@ -1,9 +1,17 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ColorModeContext } from "./ColorModeContext";
 
 export const ColorModeProvider = ({ children }) => {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(() => {
+    const storedMode = localStorage.getItem("colorMode");
+    return storedMode !== null ? storedMode : "light";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("colorMode", mode);
+  }, [mode]);
+
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
@@ -30,4 +38,4 @@ export const ColorModeProvider = ({ children }) => {
       </ColorModeContext.Provider>
     </ThemeProvider>
   );
-}
+};
