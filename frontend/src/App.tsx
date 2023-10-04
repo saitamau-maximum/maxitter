@@ -8,9 +8,9 @@ import React from "react";
 
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const onSubmitted = (post: Post[]) => {
+  const onSubmitted = (post: Post) => {
     setPosts([post, ...posts]);
   };
 
