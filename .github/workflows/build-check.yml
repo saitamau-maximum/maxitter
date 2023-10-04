@@ -17,12 +17,22 @@ jobs:
               uses: actions/setup-node@v2
               with:
                     node-version: '18.x'
-            - name: Install dependencies
+            - name: Setup Golang
+              uses: actions/setup-go@v2
+              with:
+                    go-version: '1.20'
+            - name: Install Frontend Dependencies
               working-directory: ./frontend
               run: npm ci
-            - name: Build
+            - name: Frontend Build Check
               working-directory: ./frontend
               run: npm run build
+            - name: Install Backend Dependencies
+              working-directory: ./backend
+              run: go mod download
+            - name: Backend Build Check
+              working-directory: ./backend
+              run: go build -o main .
 
 
         
