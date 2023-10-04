@@ -1,6 +1,14 @@
 import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Post } from "../types/user";
+import React from "react";
 
-export const Timeline = ({ posts, isLoading, fetchPosts }) => {
+type Props = {
+  posts: Post[];
+  isLoading: boolean;
+  fetchPosts: () => void;
+}
+
+export const Timeline = ({ posts, isLoading, fetchPosts }: Props) => {
   return (
     <>
       <Box textAlign="center" m={3}>
