@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -42,31 +41,6 @@ func connectDB() *sqlx.DB {
 		panic(err)
 	}
 	return con
-}
-
-func migrate() {
-	log.Println("migrate start")
-	db := connectDB()
-	defer db.Close()
-
-	files, err := os.ReadDir(SQL_PATH)
-	if err != nil {
-		panic(err)
-	}
-	log.Println("migrate files: ", files)
-
-	for _, file := range files {
-		log.Println("migrate: " + file.Name())
-		data, err := os.ReadFile(SQL_PATH + "/" + file.Name())
-		if err != nil {
-			panic(err)
-		}
-		_, err = db.Exec(string(data))
-		if err != nil {
-			panic(err)
-		}
-	}
-	log.Println("migrate end")
 }
 
 func init() {
