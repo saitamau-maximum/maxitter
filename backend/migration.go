@@ -29,7 +29,7 @@ func migrate() {
 	}
 
 	// indexをposts.created_atにつける
-	_, err = db.Exec("ALTER TABLE `posts` ADD INDEX `created_at_index` (`created_at`)")
+	_, err = db.Exec("CREATE INDEX created_at ON posts (created_at)")
 	if err != nil {
 		log.Println("index already exists: ", err)
 	}
