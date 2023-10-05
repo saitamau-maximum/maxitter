@@ -4,5 +4,3 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `created_at` datetime NOT NULL COMMENT '投稿日時',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `posts` ADD INDEX `created_at_index` (`created_at`);
