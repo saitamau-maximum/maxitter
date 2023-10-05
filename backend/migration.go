@@ -29,9 +29,9 @@ func migrate() {
 	}
 
 	// indexをposts.created_atにつける
-	_, err = db.Exec("CREATE INDEX created_at ON posts (created_at)")
+	_, err = db.Exec("CREATE INDEX posts_latest_idx ON posts (created_at)")
 	if err != nil {
-		log.Println("index already exists: ", err)
+		log.Println("index already exists")
 	}
 
 	log.Println("migrate end")
