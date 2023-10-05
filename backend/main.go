@@ -18,7 +18,8 @@ type Handler struct {
 }
 
 var (
-	SQL_PATH = "./sql"
+	SQL_PATH   = "./sql"
+	IMAGES_DIR = "./public/images"
 )
 
 func getEnv(key, fallback string) string {
@@ -98,7 +99,7 @@ type Post struct {
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	posts := []Post{}
-	err := h.DB.Select(&posts, "SELECT * FROM posts")
+	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20")
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
