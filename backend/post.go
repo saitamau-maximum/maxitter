@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	USERNAME   = "Maxitter"
+	USERNAME   = "Maxitter 投稿通知"
 	AVATER_URL = ""
 )
 
