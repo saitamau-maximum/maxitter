@@ -41,7 +41,7 @@ func sendPostWebhook(post *Post) bool {
 				URL:   "",
 				Color: 0x23d9eb,
 				Author: webhook.DiscordAuthor{
-					Name: USERNAME,
+					Name: "匿名のユーザー",
 					Icon: AVATER_URL,
 				},
 				TimeStamp: post.CreatedAt,
