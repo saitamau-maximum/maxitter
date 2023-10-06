@@ -6,6 +6,7 @@ services:
       - 80:80
     volumes:
       - ./etc/nginx/dev/conf.d:/etc/nginx/conf.d
+      - ./backend/public:/var/www/public
     depends_on:
       - backend
       - frontend

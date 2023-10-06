@@ -7,6 +7,7 @@ services:
     volumes:
       - ./etc/nginx/prod/conf.d:/etc/nginx/conf.d
       - ./frontend/dist:/var/www/html
+      - ./backend/public:/var/www/public
     depends_on:
       - backend
 
@@ -37,6 +38,8 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    volumes:
+      - ./backend/public:/app/public
     depends_on:
       database:
         condition: service_healthy

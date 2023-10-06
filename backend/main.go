@@ -15,7 +15,8 @@ type Handler struct {
 }
 
 var (
-	SQL_PATH = "./sql"
+	SQL_PATH   = "./sql"
+	IMAGES_DIR = "./public/images"
 )
 
 func getEnv(key, fallback string) string {
