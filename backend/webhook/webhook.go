@@ -7,11 +7,6 @@ import (
 	"net/http"
 )
 
-const (
-	USERNAME   = "Maxitter"
-	AVATER_URL = ""
-)
-
 type DiscordImg struct {
 	URL string `json:"url"`
 	H   int    `json:"height"`
@@ -28,14 +23,15 @@ type DiscordField struct {
 	Inline bool   `json:"inline"`
 }
 type DiscordEmbed struct {
-	Title  string         `json:"title"`
-	Desc   string         `json:"description"`
-	URL    string         `json:"url"`
-	Color  int            `json:"color"`
-	Image  DiscordImg     `json:"image"`
-	Thum   DiscordImg     `json:"thumbnail"`
-	Author DiscordAuthor  `json:"author"`
-	Fields []DiscordField `json:"fields"`
+	Title     string         `json:"title"`
+	Desc      string         `json:"description"`
+	URL       string         `json:"url"`
+	Color     int            `json:"color"`
+	Image     DiscordImg     `json:"image"`
+	Thum      DiscordImg     `json:"thumbnail"`
+	Author    DiscordAuthor  `json:"author"`
+	Fields    []DiscordField `json:"fields"`
+	TimeStamp string         `json:"timestamp"`
 }
 
 type DiscordWebhook struct {
@@ -46,7 +42,7 @@ type DiscordWebhook struct {
 	TTS       bool           `json:"tts"`
 }
 
-func SendWebhook(whurl string, dw *DiscordWebhook) {
+func SendWebhook(whurl, username, avater_url string, dw *DiscordWebhook) {
 	j, err := json.Marshal(dw)
 	if err != nil {
 		fmt.Println("JSON error:", err)
