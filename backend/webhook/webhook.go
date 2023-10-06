@@ -42,17 +42,17 @@ type DiscordWebhook struct {
 	TTS       bool           `json:"tts"`
 }
 
-func SendWebhook(whurl, username, avater_url string, dw *DiscordWebhook) {
+func SendWebhook(whurl, username, avater_url string, dw *DiscordWebhook) bool {
 	j, err := json.Marshal(dw)
 	if err != nil {
 		fmt.Println("JSON error:", err)
-		return
+		return false
 	}
 
 	req, err := http.NewRequest("POST", whurl, bytes.NewBuffer(j))
 	if err != nil {
 		fmt.Println("new request error: ", err)
-		return
+		return false
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -60,9 +60,11 @@ func SendWebhook(whurl, username, avater_url string, dw *DiscordWebhook) {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("A http client error occurred: ", err)
-		return
+		return false
 	}
 	if resp.StatusCode != 204 {
 		fmt.Printf("failed to send a message to Webhook in Discord (%#v).\n", resp)
 	}
+
+	return true
 }
