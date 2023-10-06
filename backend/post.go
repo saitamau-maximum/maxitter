@@ -38,7 +38,7 @@ func sendPostWebhook(post *Post) bool {
 			{
 				Title: "",
 				Desc:  post.Body,
-				URL:   "https://maxitter2.netlify.app/",
+				URL:   "",
 				Color: 0x23d9eb,
 				Author: webhook.DiscordAuthor{
 					Name: USERNAME,
