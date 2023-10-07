@@ -83,6 +83,7 @@ func main() {
 	h := &Handler{DB: db, Logger: e.Logger}
 	api := e.Group("/api")
 	api.GET("/posts", h.GetPosts)
+	api.GET("/counts-posts",h.Count)
 	api.POST("/posts", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
 		e.Logger.Info("health check")
@@ -105,6 +106,20 @@ func (h *Handler) GetPosts(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, posts)
+}
+
+func (h *Handler) Count(c echo.Context) error {
+	count :=0
+	err := h.DB.Get(&count, "SELECT COUNT( * ) FROM posts")
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, CountResponse{Count:count})
+}
+
+type CountResponse struct {
+	Count int `json:"count"`
 }
 
 func (h *Handler) CreatePost(c echo.Context) error {
