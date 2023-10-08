@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -45,31 +44,6 @@ func connectDB() *sqlx.DB {
 	return con
 }
 
-func migrate() {
-	log.Println("migrate start")
-	db := connectDB()
-	defer db.Close()
-
-	files, err := os.ReadDir(SQL_PATH)
-	if err != nil {
-		panic(err)
-	}
-	log.Println("migrate files: ", files)
-
-	for _, file := range files {
-		log.Println("migrate: " + file.Name())
-		data, err := os.ReadFile(SQL_PATH + "/" + file.Name())
-		if err != nil {
-			panic(err)
-		}
-		_, err = db.Exec(string(data))
-		if err != nil {
-			panic(err)
-		}
-	}
-	log.Println("migrate end")
-}
-
 func init() {
 	migrate()
 }
@@ -88,13 +62,8 @@ func main() {
 		e.Logger.Info("health check")
 		return c.JSON(200, "ok")
 	})
+	api.GET("/users", h.GetUsers)
 	e.Logger.Fatal(e.Start(":8000"))
-}
-
-type Post struct {
-	ID        string `db:"id" json:"id"`
-	Body      string `db:"body" json:"body"`
-	CreatedAt string `db:"created_at" json:"created_at"`
 }
 
 func (h *Handler) GetPosts(c echo.Context) error {
@@ -127,4 +96,14 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, post)
+}
+
+func (h *Handler) GetUsers(c echo.Context) error {
+	users := []User{}
+	err := h.DB.Select(&users, "SELECT * FROM users")
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, users)
 }
