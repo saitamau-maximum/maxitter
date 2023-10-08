@@ -88,6 +88,7 @@ func main() {
 		e.Logger.Info("health check")
 		return c.JSON(200, "ok")
 	})
+	api.GET("/users", h.GetUsers)
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
@@ -127,4 +128,23 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, post)
+}
+
+type User struct {
+	ID              string `db:"id" json:"id"`
+	Name            string `db:"username" json:"name"`
+	CreatedAt       string `db:"created_at" json:"created_at"`
+	UpdatedAt       string `db:"updated_at" json:"updated_at"`
+	ProfileImageURL string `db:"profile_image_url" json:"profile_image_url"`
+	Bio             string `db:"bio" json:"bio"`
+}
+
+func (h *Handler) GetUsers(c echo.Context) error {
+	users := []User{}
+	err := h.DB.Select(&users, "SELECT * FROM users")
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, users)
 }
