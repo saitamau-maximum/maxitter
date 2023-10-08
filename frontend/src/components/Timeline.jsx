@@ -1,11 +1,11 @@
 import { Box, Button, Card, CardContent, Typography , CardActionArea } from "@mui/material";
 
-export const Timeline = ({ posts, isLoading, fetchPosts }) => {
-  const formatDateTime = (dateTimeString) => {
-    const options = { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
-    return new Date(dateTimeString).toLocaleString("ja-JP", options);
-  };
+const formatDateTime = (dateTimeString) => {
+  const options = { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
+  return new Date(dateTimeString).toLocaleString("ja-JP", options);
+};
 
+export const Timeline = ({ posts, isLoading, fetchPosts }) => {
   return (
     <>
       <Box textAlign="center" m={3}>
