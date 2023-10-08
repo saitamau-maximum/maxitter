@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, Typography , CardActionArea } from "@mui/material";
 
 const formatDateTime = (dateTimeString) => {
-  const options = { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
+  const options = {timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
   return new Date(dateTimeString).toLocaleString("ja-JP", options);
 };
 
