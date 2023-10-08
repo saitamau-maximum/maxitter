@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography , CardActionArea } from "@mui/material";
 
 export const Timeline = ({ posts, isLoading, fetchPosts }) => {
   return (
@@ -15,9 +15,12 @@ export const Timeline = ({ posts, isLoading, fetchPosts }) => {
       </Box>
       {posts.map((post) => (
         <Card key={post.id} sx={{ my: 2 }}>
-          <CardContent>
-            <Typography variant="body1">{post.body} {post.created_at}</Typography>
-          </CardContent>
+          <CardActionArea>
+            <CardContent>
+              <Typography variant="body1">{post.body}</Typography>
+              <Typography variant="body2" color="text.secondary">{post.created_at}</Typography>
+            </CardContent>
+          </CardActionArea>
         </Card>
       ))}
     </>
