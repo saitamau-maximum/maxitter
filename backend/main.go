@@ -92,12 +92,6 @@ func main() {
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
-type Post struct {
-	ID        string `db:"id" json:"id"`
-	Body      string `db:"body" json:"body"`
-	CreatedAt string `db:"created_at" json:"created_at"`
-}
-
 func (h *Handler) GetPosts(c echo.Context) error {
 	posts := []Post{}
 	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20")
@@ -128,15 +122,6 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, post)
-}
-
-type User struct {
-	ID              string `db:"id" json:"id"`
-	Name            string `db:"username" json:"name"`
-	CreatedAt       string `db:"created_at" json:"created_at"`
-	UpdatedAt       string `db:"updated_at" json:"updated_at"`
-	ProfileImageURL string `db:"profile_image_url" json:"profile_image_url"`
-	Bio             string `db:"bio" json:"bio"`
 }
 
 func (h *Handler) GetUsers(c echo.Context) error {
