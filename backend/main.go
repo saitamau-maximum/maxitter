@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -18,7 +17,8 @@ type Handler struct {
 }
 
 var (
-	SQL_PATH = "./sql"
+	SQL_PATH   = "./sql"
+	IMAGES_DIR = "./public/images"
 )
 
 func getEnv(key, fallback string) string {
@@ -42,31 +42,6 @@ func connectDB() *sqlx.DB {
 		panic(err)
 	}
 	return con
-}
-
-func migrate() {
-	log.Println("migrate start")
-	db := connectDB()
-	defer db.Close()
-
-	files, err := os.ReadDir(SQL_PATH)
-	if err != nil {
-		panic(err)
-	}
-	log.Println("migrate files: ", files)
-
-	for _, file := range files {
-		log.Println("migrate: " + file.Name())
-		data, err := os.ReadFile(SQL_PATH + "/" + file.Name())
-		if err != nil {
-			panic(err)
-		}
-		_, err = db.Exec(string(data))
-		if err != nil {
-			panic(err)
-		}
-	}
-	log.Println("migrate end")
 }
 
 func init() {
@@ -98,7 +73,7 @@ type Post struct {
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	posts := []Post{}
-	err := h.DB.Select(&posts, "SELECT * FROM posts")
+	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20")
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)

@@ -10,4 +10,5 @@ if [ ! -f "${ENV_FILE}" ]; then
     exit 1
 fi
 
+docker compose -f docker-compose.prod.yml down
 docker compose -f docker-compose.prod.yml up -d --build

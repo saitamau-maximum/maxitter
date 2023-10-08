@@ -28,3 +28,20 @@ MaximumメンバーがWeb研究部の活動として、Twitterのようなマイ
 3. `cp .env.example .env`で.envファイルを作成
 4. `.env`ファイルを自分の好きな名前やパスワードに書き換え
 5. `./scripts/setup.sh` でビルドしてコンテナを起動する
+
+### 停止
+
+`./scripts/stop.sh` でコンテナを停止する
+
+### 再開
+
+`./scripts/start.sh` でコンテナを再開する
+
+### DBデータの削除
+
+`./scripts/reset-db.sh` でDBデータを削除する
+
+### デプロイ
+
+`./scripts/deploy.sh` で本番環境にデプロイする
+（マイグレーションなど特別なオペレーションが必要な場合もある）
