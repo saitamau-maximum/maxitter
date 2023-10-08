@@ -89,6 +89,7 @@ func main() {
 		return c.JSON(200, "ok")
 	})
 	api.GET("/users", h.GetUsers)
+	api.POST("/users/new", h.CreateUser)
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
@@ -147,4 +148,27 @@ func (h *Handler) GetUsers(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, users)
+}
+
+func (h *Handler) CreateUser(c echo.Context) error {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	user := new(User)
+	if err := c.Bind(user); err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	user.ID = id.String()
+	user.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+	user.UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
+
+	_, err = h.DB.Exec("INSERT INTO users (id, username, created_at, updated_at, profile_image_url, bio) VALUES (?, ?, ?, ?, ?, ?)", user.ID, user.Name, user.CreatedAt, user.UpdatedAt, user.ProfileImageURL, user.Bio)
+	if err != nil {
+		h.Logger.Error(err)
+		return c.JSON(500, err)
+	}
+	return c.JSON(200, user)
 }
