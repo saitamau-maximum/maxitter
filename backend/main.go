@@ -80,8 +80,7 @@ func (h *Handler) GetPosts(c echo.Context) error {
 	}
 	index := page * 20
 	posts := []Post{}
-	query := fmt.Sprintf("SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET %d", index)
-	err = h.DB.Select(&posts, query)
+	err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET index = ?", index)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
