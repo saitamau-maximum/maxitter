@@ -181,7 +181,8 @@ func (h *Handler) CreatePost(c echo.Context) error {
 	}
 
 	if err := sendPostWebhook(post); err != nil {
-		return fmt.Errorf("sendPostWebhook error: %v", err)
+		// Discord Webhook送信に失敗してもエラーにしない
+		fmt.Printf("sendPostWebhook error: %v", err)
 	}
 
 	return c.JSON(200, post)
