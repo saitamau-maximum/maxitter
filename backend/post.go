@@ -13,7 +13,7 @@ import (
 
 const (
 	DISCORD_USERNAME   = "Maxitter 投稿通知"
-	DISCORD_AVATER_URL = ""
+	DISCORD_AVATAR_URL = ""
 )
 
 type Post struct {
@@ -31,7 +31,7 @@ func sendPostWebhook(post *Post) error {
 
 	discord_webhook := &external.DiscordWebhook{
 		UserName:  DISCORD_USERNAME,
-		AvatarURL: DISCORD_AVATER_URL,
+		AvatarURL: DISCORD_AVATAR_URL,
 		Content:   "",
 		Embeds: []external.DiscordEmbed{
 			{
@@ -41,7 +41,7 @@ func sendPostWebhook(post *Post) error {
 				Color: 0x23d9eb,
 				Author: external.DiscordAuthor{
 					Name: "匿名のユーザー",
-					Icon: DISCORD_AVATER_URL,
+					Icon: DISCORD_AVATAR_URL,
 				},
 				TimeStamp: post.CreatedAt,
 			},
@@ -51,7 +51,7 @@ func sendPostWebhook(post *Post) error {
 	result := external.SendWebhookDiscord(
 		discord_webhook_url,
 		DISCORD_USERNAME,
-		DISCORD_AVATER_URL,
+		DISCORD_AVATAR_URL,
 		discord_webhook,
 	)
 
