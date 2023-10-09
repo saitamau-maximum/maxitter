@@ -57,17 +57,7 @@ function App() {
           />
         </Container>
       </ColorModeProvider>
-      <div className="pagination">
-        {Array.from( 10 , (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={index + 1 === page ? "active" : ""}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+     
     </>
     
   );
