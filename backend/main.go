@@ -76,12 +76,14 @@ var Index = 0
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	pageParam := c.QueryParam("page")
-	page, _ := strconv.Atoi(pageParam)
+	page, err := strconv.Atoi(pageParam)
+	if err != nil {
+		return c.JSON(400, err)
+	}
 
-	Index := (page) * 20
+	index := page * 20
 	posts := []Post{}
-	query := fmt.Sprintf("SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET %d", Index)
-	err := h.DB.Select(&posts, query)
+	err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?", index)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
