@@ -1,8 +1,22 @@
-import { Box, Button, Card, CardContent, Typography , CardActionArea } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  CardActionArea,
+} from "@mui/material";
 
 const formatDateTime = (dateTimeString) => {
-  const getTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const options = {timeZone: getTimeZone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const options = {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
   return new Date(dateTimeString).toLocaleString("ja-JP", options);
 };
 
@@ -24,7 +38,9 @@ export const Timeline = ({ posts, isLoading, fetchPosts }) => {
           <CardActionArea>
             <CardContent>
               <Typography variant="body1">{post.body}</Typography>
-              <Typography variant="subtitle2" color="text.secondary">{formatDateTime(post.created_at)}</Typography>
+              <Typography variant="subtitle2" color="text.secondary">
+                {formatDateTime(post.created_at)}
+              </Typography>
             </CardContent>
           </CardActionArea>
         </Card>
