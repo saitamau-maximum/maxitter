@@ -48,7 +48,7 @@ func sendPostWebhook(post *Post) error {
 		},
 	}
 
-	result := external.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
+	result := external.SendWebhookDiscord(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
 
 	if result != nil {
 		return fmt.Errorf("sendWebhook error: %v", result)

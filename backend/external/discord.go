@@ -42,7 +42,7 @@ type DiscordWebhook struct {
 	TTS       bool           `json:"tts"`
 }
 
-func SendWebhook(whurl, username, avater_url string, dw *DiscordWebhook) error {
+func SendWebhookDiscord(whurl, username, avater_url string, dw *DiscordWebhook) error {
 	j, err := json.Marshal(dw)
 	if err != nil {
 		return fmt.Errorf("JSON error: %v", err)
