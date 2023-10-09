@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -22,12 +22,11 @@ type Post struct {
 	CreatedAt string `db:"created_at" json:"created_at"`
 }
 
-func sendPostWebhook(post *Post) bool {
+func sendPostWebhook(post *Post) error {
 	discord_webhook_url := getEnv("DISCORD_WEBHOOK_URL", "")
 
 	if discord_webhook_url == "" {
-		log.Println("DISCORD_WEBHOOK_URL is empty")
-		return false
+		return fmt.Errorf("DISCORD_WEBHOOK_URL is empty")
 	}
 
 	discord_webhook := &webhook.DiscordWebhook{
@@ -51,12 +50,11 @@ func sendPostWebhook(post *Post) bool {
 
 	result := webhook.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
 
-	if !result {
-		log.Println("SendWebhook error")
-		return false
+	if result != nil {
+		return fmt.Errorf("sendWebhook error: %v", result)
 	}
 
-	return true
+	return nil
 }
 
 func (h *Handler) GetPosts(c echo.Context) error {
@@ -89,8 +87,8 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 
-	if !sendPostWebhook(post) {
-		log.Println("sendPostWebhook error")
+	if err := sendPostWebhook(post); err != nil {
+		return fmt.Errorf("sendPostWebhook error: %v", err)
 	}
 
 	return c.JSON(200, post)
