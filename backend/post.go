@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 
-	"github.com/saitamau-maximum/maxitter/backend/webhook"
+	"github.com/saitamau-maximum/maxitter/backend/external"
 )
 
 const (
@@ -29,17 +29,17 @@ func sendPostWebhook(post *Post) error {
 		return fmt.Errorf("DISCORD_WEBHOOK_URL is empty")
 	}
 
-	discord_webhook := &webhook.DiscordWebhook{
+	discord_webhook := &external.DiscordWebhook{
 		UserName:  DISCORD_USERNAME,
 		AvatarURL: DISCORD_AVATER_URL,
 		Content:   "",
-		Embeds: []webhook.DiscordEmbed{
+		Embeds: []external.DiscordEmbed{
 			{
 				Title: "",
 				Desc:  post.Body,
 				URL:   "",
 				Color: 0x23d9eb,
-				Author: webhook.DiscordAuthor{
+				Author: external.DiscordAuthor{
 					Name: "匿名のユーザー",
 					Icon: DISCORD_AVATER_URL,
 				},
@@ -48,7 +48,7 @@ func sendPostWebhook(post *Post) error {
 		},
 	}
 
-	result := webhook.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
+	result := external.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
 
 	if result != nil {
 		return fmt.Errorf("sendWebhook error: %v", result)
