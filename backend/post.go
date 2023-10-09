@@ -23,9 +23,9 @@ type Post struct {
 }
 
 func sendPostWebhook(post *Post) bool {
-	webhook_url := getEnv("DISCORD_WEBHOOK_URL", "")
+	discord_webhook_url := getEnv("DISCORD_WEBHOOK_URL", "")
 
-	if webhook_url == "" {
+	if discord_webhook_url == "" {
 		log.Println("DISCORD_WEBHOOK_URL is empty")
 		return false
 	}
@@ -49,7 +49,7 @@ func sendPostWebhook(post *Post) bool {
 		},
 	}
 
-	result := webhook.SendWebhook(webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, dw)
+	result := webhook.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, dw)
 
 	if !result {
 		log.Println("SendWebhook error")
