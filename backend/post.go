@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	USERNAME   = "Maxitter 投稿通知"
-	AVATER_URL = ""
+	DISCORD_USERNAME   = "Maxitter 投稿通知"
+	DISCORD_AVATER_URL = ""
 )
 
 type Post struct {
@@ -31,8 +31,8 @@ func sendPostWebhook(post *Post) bool {
 	}
 
 	dw := &webhook.DiscordWebhook{
-		UserName:  USERNAME,
-		AvatarURL: AVATER_URL,
+		UserName:  DISCORD_USERNAME,
+		AvatarURL: DISCORD_AVATER_URL,
 		Content:   "",
 		Embeds: []webhook.DiscordEmbed{
 			{
@@ -42,14 +42,14 @@ func sendPostWebhook(post *Post) bool {
 				Color: 0x23d9eb,
 				Author: webhook.DiscordAuthor{
 					Name: "匿名のユーザー",
-					Icon: AVATER_URL,
+					Icon: DISCORD_AVATER_URL,
 				},
 				TimeStamp: post.CreatedAt,
 			},
 		},
 	}
 
-	result := webhook.SendWebhook(whurl, USERNAME, AVATER_URL, dw)
+	result := webhook.SendWebhook(whurl, DISCORD_USERNAME, DISCORD_AVATER_URL, dw)
 
 	if !result {
 		log.Println("SendWebhook error")
