@@ -74,12 +74,14 @@ type Post struct {
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	pageParam := c.QueryParam("page")
-	page, _ := strconv.Atoi(pageParam)
-
-	Index := (page) * 20
+	page, err := strconv.Atoi(pageParam)
+	if err != nil {
+		return c.JSON(400, err)
+	}
+	index := page * 20
 	posts := []Post{}
-	query := fmt.Sprintf("SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET %d", Index)
-	err := h.DB.Select(&posts, query)
+	query := fmt.Sprintf("SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET %d", index)
+	err = h.DB.Select(&posts, query)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
