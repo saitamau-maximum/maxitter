@@ -7,21 +7,14 @@ import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
-  const [page, setPage] = useState(1);
+
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
 
-  useEffect(() => {
-    // ページ数を取得
-    fetch("/api/getTotalPages")
-      .then((response) => response.json())
-      .then((data) => {
-        setTotalPages(data);
-      })
-    });
+
   const fetchPosts = async () => {
     setIsLoading(true);
     const res = await fetch("/api/posts");
