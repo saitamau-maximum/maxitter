@@ -52,6 +52,7 @@ func connectDB() *sqlx.DB {
 	}
 	return con
 }
+
 func migrate() {
 	log.Println("migrate start")
 	db := connectDB()
