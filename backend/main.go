@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -56,6 +58,7 @@ func main() {
 	defer db.Close()
 	h := &Handler{DB: db, Logger: e.Logger}
 	api := e.Group("/api")
+	http.HandleFunc("/api/getItems", getItems)
 	api.GET("/posts", h.GetPosts)
 	api.POST("/posts", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
@@ -71,9 +74,22 @@ type Post struct {
 	CreatedAt string `db:"created_at" json:"created_at"`
 }
 
+var itemsPerPage = 20
+var Index = 0
+
+func getItems(w http.ResponseWriter, r *http.Request) {
+	pageParam := r.URL.Query().Get("page")
+	page, err := strconv.Atoi(pageParam)
+	if err != nil {
+		http.Error(w, "Invalid page number", http.StatusBadRequest)
+		return
+	}
+	Index = page * itemsPerPage
+}
+
 func (h *Handler) GetPosts(c echo.Context) error {
 	posts := []Post{}
-	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20")
+	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET Index")
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
