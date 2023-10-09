@@ -11,7 +11,7 @@ export const Form = ({ onSubmitted }: FormProps) => {
   const [body, setBody] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const sendPost = async (e: any) => {
+  const sendPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
     const res = await fetch("/api/posts", {
