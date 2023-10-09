@@ -2,6 +2,7 @@ import { Container, CssBaseline } from "@mui/material";
 import { GlobalStyles } from "@mui/material";
 import { Form } from "./components/Form";
 import { Timeline } from "./components/Timeline";
+
 import { useEffect, useState } from "react";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
@@ -10,14 +11,16 @@ function App() {
 
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
 
-
-  const fetchPosts = async () => {
+  
+  const fetchPosts = async (page) => {
     setIsLoading(true);
-    const res = await fetch("/api/posts");
+    const index = page -1;
+    const res = await fetch(`api/posts?page=${index}`);
     const data = await res.json();
     if (!res.ok) {
       console.error(data);
@@ -27,9 +30,11 @@ function App() {
     setIsLoading(false);
   };
 
+
   useEffect(() => {
     fetchPosts();
   }, []);
+
 
   return (
     <>
@@ -55,9 +60,9 @@ function App() {
             isLoading={isLoading}
             fetchPosts={fetchPosts}
           />
+          
         </Container>
       </ColorModeProvider>
-     
     </>
     
   );

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -58,7 +57,6 @@ func main() {
 	defer db.Close()
 	h := &Handler{DB: db, Logger: e.Logger}
 	api := e.Group("/api")
-	http.HandleFunc("/api/getPage", getPage)
 	api.GET("/posts", h.GetPosts)
 	api.POST("/posts", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
@@ -76,17 +74,11 @@ type Post struct {
 
 var Index = 0
 
-func getPage(w http.ResponseWriter, r *http.Request) {
-	pageParam := r.URL.Query().Get("page")
-	page, err := strconv.Atoi(pageParam)
-	if err != nil {
-		http.Error(w, "Invalid page number", http.StatusBadRequest)
-		return
-	}
-	Index = (page - 1) * 20 //20はitem per page
-}
-
 func (h *Handler) GetPosts(c echo.Context) error {
+	pageParam := c.QueryParam("page")
+	page, _ := strconv.Atoi(pageParam)
+
+	Index := (page) * 20
 	posts := []Post{}
 	query := fmt.Sprintf("SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET %d", Index)
 	err := h.DB.Select(&posts, query)
