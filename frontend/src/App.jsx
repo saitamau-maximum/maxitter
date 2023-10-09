@@ -7,14 +7,12 @@ import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
-
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
 
-  
   const fetchPosts = async () => {
     setIsLoading(true);
     const res = await fetch(`api/posts`);
