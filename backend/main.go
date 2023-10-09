@@ -72,8 +72,6 @@ type Post struct {
 	CreatedAt string `db:"created_at" json:"created_at"`
 }
 
-var Index = 0
-
 func (h *Handler) GetPosts(c echo.Context) error {
 	pageParam := c.QueryParam("page")
 	page, err := strconv.Atoi(pageParam)
