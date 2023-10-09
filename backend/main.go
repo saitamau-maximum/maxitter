@@ -110,7 +110,7 @@ const (
 	DISCORD_AVATAR_URL = ""
 )
 
-func sendPostWebhook(post *Post) error {
+func sendPostWebhookDiscord(post *Post) error {
 	discord_webhook_url := getEnv("DISCORD_WEBHOOK_URL", "")
 
 	if discord_webhook_url == "" {
@@ -180,7 +180,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 
-	if err := sendPostWebhook(post); err != nil {
+	if err := sendPostWebhookDiscord(post); err != nil {
 		// Discord Webhook送信に失敗してもエラーにしない
 		fmt.Printf("sendPostWebhook error: %v", err)
 	}
