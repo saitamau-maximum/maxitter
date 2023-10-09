@@ -30,7 +30,7 @@ func sendPostWebhook(post *Post) bool {
 		return false
 	}
 
-	dw := &webhook.DiscordWebhook{
+	discord_webhook := &webhook.DiscordWebhook{
 		UserName:  DISCORD_USERNAME,
 		AvatarURL: DISCORD_AVATER_URL,
 		Content:   "",
@@ -49,7 +49,7 @@ func sendPostWebhook(post *Post) bool {
 		},
 	}
 
-	result := webhook.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, dw)
+	result := webhook.SendWebhook(discord_webhook_url, DISCORD_USERNAME, DISCORD_AVATER_URL, discord_webhook)
 
 	if !result {
 		log.Println("SendWebhook error")
