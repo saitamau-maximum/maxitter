@@ -74,6 +74,9 @@ type Post struct {
 
 func (h *Handler) GetPosts(c echo.Context) error {
 	pageParam := c.QueryParam("page")
+	if pageParam == "" {
+		pageParam = "0"
+	}
 	page, err := strconv.Atoi(pageParam)
 	if err != nil {
 		return c.JSON(400, err)
