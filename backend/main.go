@@ -77,7 +77,7 @@ func (h *Handler) GetPosts(c echo.Context) error {
 	if pageParam == "" {
 		pageParam = "0"
 	}
-	page, err := strconv.Atoi(pageParam)
+	page, err := strconv.ParseUint(pageParam, 10, 0)
 	if err != nil {
 		return c.JSON(400, err)
 	}
