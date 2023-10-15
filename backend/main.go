@@ -44,16 +44,17 @@ func connectDB() *sqlx.DB {
 	return con
 }
 
-func init() {
-	migrate()
-
+func setJST() {
 	jst, err := time.LoadLocation("Asia/Tokyo")
-    if err != nil {
-        panic(err)
-    }
-    nowJST := time.Now().In(jst)
-    fmt.Printf("nowJST: %v\n", nowJST.Format(time.RFC3339))
-    // nowJST: 2009-11-11T08:00:00+09:00
+	if err != nil {
+		panic(err)
+	}
+	time.Local = jst
+}
+
+func init() {
+	setJST()
+	migrate()
 }
 
 func main() {
