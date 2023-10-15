@@ -31,6 +31,10 @@ function App() {
 
   return (
     <>
+      <div
+       className="App">
+          <img src='../public/karilogo.png' width="200"  height="60" className="App-logo" alt="karilogo" />
+      </div>
       <ColorModeProvider>
         <CssBaseline />
         <ToggleTheme />
