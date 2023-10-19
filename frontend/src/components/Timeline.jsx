@@ -18,6 +18,7 @@ export const Timeline = ({ posts, isLoading, fetchPosts }) => {
           {isLoading ? "読み込み中" : "更新する"}
         </Button>
       </Box>
+      
       {posts.map((post) => (
         <Card key={post.id} sx={{ my: 2 }}>
           <CardActionArea>

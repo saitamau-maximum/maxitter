@@ -56,9 +56,10 @@ func main() {
 	defer db.Close()
 	h := &Handler{DB: db, Logger: e.Logger}
 	api := e.Group("/api")
-	api.GET("/posts", h.GetPosts)
-	api.GET("/counts-posts",h.Count)
-	api.POST("/posts", h.CreatePost)
+	apiPosts := api.Group("/posts")
+	apiPosts.GET("", h.GetPosts)
+	apiPosts.GET("/count",h.Count)
+	api.POST("", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
 		e.Logger.Info("health check")
 		return c.JSON(200, "ok")
