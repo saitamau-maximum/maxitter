@@ -6,13 +6,14 @@ import {
 } from '@mui/material';
 
 
-export  const UserSelectBox = () =>{
+export  const UserSelectBox = ({user, handleChange}) =>{
   return(
+  <>
   <FormControl fullWidth>
-    <InputLabel id="usertable">User</InputLabel>
+    <InputLabel id="user">User</InputLabel>
     <Select
-      labelId="usertable"
-      id="usertable"
+      labelId="user"
+      id="user"
       value={user}
       label="User"
       onChange={handleChange}
@@ -22,5 +23,6 @@ export  const UserSelectBox = () =>{
     <MenuItem value={30}>Thirty</MenuItem>
     </Select>
   </FormControl>
+  </>
   )
 }

@@ -10,6 +10,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState('');//現在選択されているユーザーを保持する変数
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
@@ -24,6 +25,10 @@ function App() {
     }
     setPosts(data);
     setIsLoading(false);
+  };
+  //セレクトボックスの人が変更されたときに呼ばれるハンドラ関数
+  const handleChange = (event) => {
+    setSelectedUser(event.target.value);
   };
 
   useEffect(() => {
@@ -48,6 +53,10 @@ function App() {
             py: 3,
           }}
         >
+          <UserSelectBox 
+            user = {selectedUser}
+            handleChange={handleChange}
+          />
           <Form onSubmitted={onSubmitted} />
           <Timeline
             posts={posts}
