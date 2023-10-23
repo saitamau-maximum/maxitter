@@ -54,7 +54,7 @@ function App() {
           }}
         >
           <UserSelectBox 
-            user = {selectedUser}
+            selectedUser = {selectedUser}
             handleChange={handleChange}
           />
           <Form onSubmitted={onSubmitted} />
