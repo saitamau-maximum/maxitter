@@ -9,6 +9,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
   const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState('');//現在選択されているユーザーを保持する変数
   const onSubmitted = (post) => {
@@ -26,6 +27,16 @@ function App() {
     setPosts(data);
     setIsLoading(false);
   };
+  
+  const fetchUsers = async () =>{
+    const res = await fetch("/api/users");
+    if(res.ok){
+      const data = await res.json();
+      setUsers(data);
+    } else{
+      console.error(data);
+    }
+  }
   //セレクトボックスの人が変更されたときに呼ばれるハンドラ関数
   const handleChange = (event) => {
     setSelectedUser(event.target.value);
@@ -33,6 +44,7 @@ function App() {
 
   useEffect(() => {
     fetchPosts();
+    fetchUsers();
   }, []);
 
   return (
@@ -54,6 +66,7 @@ function App() {
           }}
         >
           <UserSelectBox 
+            users = {users}
             selectedUser = {selectedUser}
             handleChange={handleChange}
           />
