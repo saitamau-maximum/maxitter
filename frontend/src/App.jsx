@@ -37,7 +37,6 @@ function App() {
       console.error(data);
       return;
     }
-    console.log(data);
     setAmount(data.count);
   };
 
