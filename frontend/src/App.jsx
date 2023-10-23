@@ -14,7 +14,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
-    //setAmount(amount+1);
     fetchAmountPost();
   };
 

@@ -101,7 +101,7 @@ func main() {
 	apiPosts := api.Group("/posts")
 	apiPosts.GET("", h.GetPosts)
 	apiPosts.GET("/count",h.Count)
-	api.POST("", h.CreatePost)
+	apiPosts.POST("", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
 		e.Logger.Info("health check")
 		return c.JSON(200, "ok")
