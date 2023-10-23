@@ -19,11 +19,8 @@ export  const UserSelectBox = ({users,selectedUser, handleChange}) =>{
       onChange={handleChange}
     >
     {users.map((user) => (
-      <MenuItem value = {user.username}>{user.username}</MenuItem>
+      <MenuItem value = {user.id}>{user.username}</MenuItem>
     ))}
-    <MenuItem value={10}>Ten</MenuItem>
-    <MenuItem value={20}>Twenty</MenuItem>
-    <MenuItem value={30}>Thirty</MenuItem>
     </Select>
   </FormControl>
   </>

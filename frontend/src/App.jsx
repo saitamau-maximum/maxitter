@@ -11,7 +11,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState('');//現在選択されているユーザーを保持する変数
+  const [selectedUser, setSelectedUser] = useState('');//現在選択されているユーザーidを保持する変数
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
