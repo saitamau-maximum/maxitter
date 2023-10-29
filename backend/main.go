@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -68,8 +69,18 @@ func main() {
 }
 
 func (h *Handler) GetPosts(c echo.Context) error {
+	pageParam := c.QueryParam("page")
+	if pageParam == "" {
+		pageParam = "0"
+	}
+	page, err := strconv.ParseUint(pageParam, 10, 0)
+	if err != nil {
+		return c.JSON(400, err)
+	}
+
+	index := page * 20
 	posts := []Post{}
-	err := h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20")
+	err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?", index)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
