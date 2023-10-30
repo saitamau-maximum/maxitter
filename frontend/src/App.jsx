@@ -10,7 +10,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [amount, postCount] = useState(0);
+  const [postCount, postCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
