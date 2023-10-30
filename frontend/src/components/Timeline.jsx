@@ -5,7 +5,7 @@ const formatDateTime = (dateTimeString) => {
   return new Date(dateTimeString).toLocaleString("ja-JP", options);
 };
 
-export const Timeline = ({ posts, isLoading, fetchPosts }) => {
+export const Timeline = ({ posts, isLoading, fetchPosts, LoadFailed}) => {
   return (
     <>
       <Box textAlign="center" m={3}>
@@ -18,6 +18,12 @@ export const Timeline = ({ posts, isLoading, fetchPosts }) => {
           {isLoading ? "読み込み中" : "更新する"}
         </Button>
       </Box>
+      <Typography textAlign="center"
+        variant="h6"
+        sx={{ color: 'error.main' }}
+        >
+          {LoadFailed ? "読み込みに失敗しました": ""}
+      </Typography>
       {posts.map((post) => (
         <Card key={post.id} sx={{ my: 2 }}>
           <CardActionArea>

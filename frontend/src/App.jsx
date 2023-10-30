@@ -9,6 +9,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [LoadFailed, setLoadFailed] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
@@ -19,10 +20,13 @@ function App() {
     const data = await res.json();
     if (!res.ok) {
       console.error(data);
+      setIsLoading(false);
+      setLoadFailed(true);
       return;
     }
     setPosts(data);
     setIsLoading(false);
+    setLoadFailed(false);
   };
 
   useEffect(() => {
@@ -52,6 +56,7 @@ function App() {
             posts={posts}
             isLoading={isLoading}
             fetchPosts={fetchPosts}
+            LoadFailed={LoadFailed}
           />
         </Container>
       </ColorModeProvider>
