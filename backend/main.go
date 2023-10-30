@@ -100,7 +100,7 @@ func main() {
 	api := e.Group("/api")
 	apiPosts := api.Group("/posts")
 	apiPosts.GET("", h.GetPosts)
-	apiPosts.GET("/count",h.Count)
+	apiPosts.GET("/count",h.CountPost)
 	apiPosts.POST("", h.CreatePost)
 	api.GET("/health", func(c echo.Context) error {
 		e.Logger.Info("health check")
@@ -155,26 +155,44 @@ func sendPostWebhookDiscord(post *Post) error {
 }
 
 func (h *Handler) GetPosts(c echo.Context) error {
-	pageParam := c.QueryParam("page")
-	if pageParam == "" {
-		pageParam = "0"
-	}
-	page, err := strconv.ParseUint(pageParam, 10, 0)
-	if err != nil {
-		return c.JSON(400, err)
-	}
+    pageParam := c.QueryParam("page")
+    if pageParam == "" {
+        pageParam = "0"
+    }
+    page, err := strconv.ParseUint(pageParam, 10, 0)
+    if err != nil {
+        return c.JSON(400, err)
+    }
 
-	index := page * 20
-	posts := []Post{}
-	err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?", index)
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	return c.JSON(200, posts)
+    index := page * 20
+    posts := []Post{}
+    err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?", index)
+    if err != nil {
+        h.Logger.Error(err)
+        return c.JSON(500, err)
+    }
+
+    // 投稿件数を取得
+    count := 0
+    err = h.DB.Get(&count, "SELECT COUNT(*) FROM posts")
+    if err != nil {
+        h.Logger.Error(err)
+        return c.JSON(500, err)
+    }
+
+    response := struct {
+        Posts []Post `json:"posts"`
+        Count int    `json:"count"`
+    }{
+        Posts: posts,
+        Count: count,
+    }
+
+    return c.JSON(200, response)
 }
 
-func (h *Handler) Count(c echo.Context) error {
+
+func (h *Handler) CountPost(c echo.Context) error {
 	count :=0
 	err := h.DB.Get(&count, "SELECT COUNT( * ) FROM posts")
 	if err != nil {

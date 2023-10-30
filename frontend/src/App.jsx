@@ -10,7 +10,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [amount, setAmount] = useState(0);
+  const [amount, postCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
@@ -25,9 +25,10 @@ function App() {
       console.error(data);
       return;
     }
-    setPosts(data);
+    setPosts(data.posts); // 投稿データをセット
+    postCount(data.count); // 投稿件数をセット
     setIsLoading(false);
-  };
+};
 
 
   const fetchAmountPost = async () => {
@@ -37,7 +38,7 @@ function App() {
       console.error(data);
       return;
     }
-    setAmount(data.count);
+    postCount(data.count);
   };
 
   useEffect(() => {
