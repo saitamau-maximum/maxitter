@@ -1,14 +1,14 @@
 import { Box, Button, FormLabel, TextField } from "@mui/material";
 import { useState } from "react";
 
-export const Form = ({ onSubmitted }) => {
+export const Form = ({ onSubmitted ,selectedUser}) => {
   const [body, setBody] = useState("");
   const [isSending, setIsSending] = useState(false);
 
   const sendPost = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    const res = await fetch("/api/posts", {
+    const res = await fetch(`/api/posts?user_id=${selectedUser}`, {
       method: "POST",
       body: JSON.stringify({ body }),
       headers: {
