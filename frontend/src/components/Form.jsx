@@ -10,7 +10,7 @@ export const Form = ({ onSubmitted, selectedUser }) => {
     setIsSending(true);
     const res = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify({ body,id: selectedUser }),
+      body: JSON.stringify({ body,user_id: selectedUser }),
       headers: {
         "Content-Type": "application/json",
       },

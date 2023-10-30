@@ -70,7 +70,10 @@ function App() {
             selectedUser = {selectedUser}
             handleChange={handleChange}
           />
-          <Form onSubmitted={onSubmitted} />
+          <Form 
+            onSubmitted={onSubmitted}
+            selectedUser={selectedUser}
+          />
           <Timeline
             posts={posts}
             isLoading={isLoading}
