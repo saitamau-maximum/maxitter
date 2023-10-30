@@ -12,7 +12,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
-    setPosts([post, ...posts]);    
+    setPosts([post, ...posts]);
   };
 
   const fetchPosts = async () => {
