@@ -89,6 +89,18 @@ func (h *Handler) GetPosts(c echo.Context) error {
 }
 
 func (h *Handler) CreatePost(c echo.Context) error {
+	user_idParam := c.QueryParam("user_id")
+	if user_idParam == "" {
+		user_idParam = "0"
+	}
+	user_id, err := strconv.ParseUint(user_idParam, 10, 0)
+	if err != nil {
+		return c.JSON(400, err)
+	}
+	if err != nil {
+		return c.JSON(400, err)
+	}
+
 	id, err := uuid.NewRandom()
 	if err != nil {
 		h.Logger.Error(err)
@@ -102,7 +114,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 	post.ID = id.String()
 	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
-	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
+	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at, user_id) VALUES (?, ?, ?, ?)", post.ID, post.Body, post.CreatedAt, user_id)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
