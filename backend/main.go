@@ -66,9 +66,9 @@ func main() {
 }
 
 type Post struct {
-	ID        string `db:"id" json:"id"`
-	Body      string `db:"body" json:"body"`
-	CreatedAt string `db:"created_at" json:"created_at"`
+	ID        string 	`db:"id" json:"id"`
+	Body      string 	`db:"body" json:"body"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 func (h *Handler) GetPosts(c echo.Context) error {
@@ -93,11 +93,9 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	post.ID = id.String()
-	now := time.Now()
-	createdAt := now.Format("2006-01-02 15:04:05")
-	post.CreatedAt = now.Format(time.RFC3339)
+	post.CreatedAt = time.Now()
 
-	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, createdAt)
+	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
