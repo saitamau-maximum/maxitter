@@ -46,14 +46,6 @@ func connectDB() *sqlx.DB {
 
 func init() {
 	migrate()
-
-	jst, err := time.LoadLocation("Asia/Tokyo")
-    if err != nil {
-        panic(err)
-    }
-    nowJST := time.Now().In(jst)
-    fmt.Printf("nowJST: %v\n", nowJST.Format(time.RFC3339))
-    // nowJST: 2009-11-11T08:00:00+09:00
 }
 
 func main() {
@@ -101,9 +93,11 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	post.ID = id.String()
-	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+	now := time.Now()
+	createdAt := now.Format("2006-01-02 15:04:05")
+	post.CreatedAt = now.Format(time.RFC3339)
 
-	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
+	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, createdAt)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
