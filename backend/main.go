@@ -44,7 +44,16 @@ func connectDB() *sqlx.DB {
 	return con
 }
 
+func setJST() {
+	jst, err := time.LoadLocation("Asia/Tokyo")
+	if err != nil {
+		panic(err)
+	}
+	time.Local = jst
+}
+
 func init() {
+	setJST()
 	migrate()
 }
 
