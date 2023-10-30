@@ -2,6 +2,7 @@ import { Container, CssBaseline } from "@mui/material";
 import { GlobalStyles } from "@mui/material";
 import { Form } from "./components/Form";
 import { Timeline } from "./components/Timeline";
+import { Header } from "./components/Header"
 import { useEffect, useState } from "react";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
@@ -37,6 +38,7 @@ function App() {
     <>
       <ColorModeProvider>
         <CssBaseline />
+        <Header/>
         <ToggleTheme />
         <GlobalStyles
           styles={{
