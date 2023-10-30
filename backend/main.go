@@ -87,7 +87,6 @@ func migrate() {
 }
 
 func init() {
-	setJST()
 	migrate()
 }
 
