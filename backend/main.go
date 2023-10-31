@@ -23,7 +23,7 @@ type Handler struct {
 type Post struct {
 	ID        string `db:"id" json:"id"`
 	Body      string `db:"body" json:"body"`
-	CreatedAt string `db:"created_at" json:"created_at"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 var (
@@ -133,7 +133,7 @@ func sendPostWebhookDiscord(post *Post) error {
 					Name: "匿名のユーザー",
 					Icon: DISCORD_AVATAR_URL,
 				},
-				TimeStamp: post.CreatedAt,
+				TimeStamp: post.CreatedAt.String(),
 			},
 		},
 	}
@@ -184,7 +184,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	post.ID = id.String()
-	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+	post.CreatedAt = time.Now()
 
 	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
 	if err != nil {
