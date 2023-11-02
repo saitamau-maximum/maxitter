@@ -10,7 +10,7 @@ import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [amount, setpostCount] = useState(0);
+  const [postCount, setpostCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
@@ -73,7 +73,7 @@ function App() {
           />
         </Container>
         <CountPost 
-          amount={amount}
+          amount={postCount}
         />
       </ColorModeProvider>
     </>
