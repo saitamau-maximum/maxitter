@@ -8,9 +8,9 @@ export const Form = ({ onSubmitted ,selectedUser}) => {
   const sendPost = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    const res = await fetch(`/api/posts?user_id=${selectedUser}`, {
+    const res = await fetch(`/api/posts`, {
       method: "POST",
-      body: JSON.stringify({ body }),
+      body: JSON.stringify({ body:body ,user_id:selectedUser }),
       headers: {
         "Content-Type": "application/json",
       },
