@@ -43,10 +43,6 @@ go mod tidy
 echo "バックエンドのセットアップが完了しました！"
 
 echo "Dockerのセットアップを開始します..."
-<<<<<<< HEAD
-=======
-
->>>>>>> fe2d9dda3b2192048290e21c676424b4df3943bf
 docker compose down
 docker compose build
 docker compose up -d
