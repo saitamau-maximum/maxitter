@@ -173,12 +173,7 @@ func (h *Handler) GetPosts(c echo.Context) error {
     }
 
     // 投稿件数を取得
-    count := 0
-    err = h.DB.Get(&count, "SELECT COUNT(*) FROM posts")
-    if err != nil {
-        h.Logger.Error(err)
-        return c.JSON(500, err)
-    }
+    count := len(posts)
 
     response := struct {
         Posts []Post `json:"posts"`
