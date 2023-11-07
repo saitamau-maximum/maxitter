@@ -36,7 +36,15 @@ export const Home = () => {
     >
       <Form onSubmitted={onSubmitted} />
       <Timeline posts={posts} isLoading={isLoading} fetchPosts={fetchPosts} />
-      <Pagination count={10} size="large" />
+      <Pagination
+        count={10}
+        variant="outlined"
+        size="large"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          my: 3,
+        }} />
     </Container>
   );
 };
