@@ -8,7 +8,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mysqldialect"
 
+	"github.com/saitamau-maximum/maxitter/backend/config"
 	infra "github.com/saitamau-maximum/maxitter/backend/infra/mysql"
 	repo "github.com/saitamau-maximum/maxitter/backend/infra/repository"
 	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
@@ -35,13 +37,21 @@ func main() {
 	e := echo.New()
 	e.Debug = true
 	e.Logger.SetLevel(0)
-	db := infra.ConnectDB()
-	defer db.Close()
+
+	config := config.NewConfig()
+
+	db, err := infra.ConnectDB(config)
+	if err != nil {
+		panic(err)
+	}
+
+	bunDB := bun.NewDB(db, mysqldialect.New())
+	defer bunDB.Close()
 
 	container := Container{
-		DB:             db,
-		PostRepository: repo.NewPostRepository(db),
-		UserRepository: repo.NewUserRepository(db),
+		DB:             bunDB,
+		PostRepository: repo.NewPostRepository(bunDB),
+		UserRepository: repo.NewUserRepository(bunDB),
 	}
 
 	h := &Handler{Container: &container, Logger: e.Logger}

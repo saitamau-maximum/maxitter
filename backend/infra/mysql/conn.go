@@ -4,14 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/mysqldialect"
-
 	"github.com/saitamau-maximum/maxitter/backend/config"
 )
 
-func ConnectDB() *bun.DB {
-	cfg := config.NewConfig()
+func ConnectDB(cfg *config.Config) (*sql.DB, error) {
 	cfg_mysql := cfg.MYSQL
 
 	user := cfg_mysql.MYSQL_USER
@@ -28,11 +24,10 @@ func ConnectDB() *bun.DB {
 		dbname,
 	)
 
-	con, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	db := bun.NewDB(con, mysqldialect.New())
-	return db
+	return db, nil
 }
