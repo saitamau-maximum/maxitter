@@ -5,12 +5,14 @@ PROJECT_DIR="$(cd "${THIS_FILE_DIR}/.." && pwd)"
 SERVER_DIR="${PROJECT_DIR}/backend"
 ENV_FILE="${PROJECT_DIR}/.env"
 
-if [ ! -f "${ENV_FILE}" ]; then
-    echo "環境変数ファイルが存在しません！"
-    echo "環境変数ファイルを作成してから再度実行してください。"
+which dotenv >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "dotenv-cli がインストールされていません！"
+    echo "dotenvインストールしてから再度実行してください。"
+    echo "\`npm install -g dotenv-cli\`"
     exit 1
 fi
 
 cd "${SERVER_DIR}"
 
-go run "${SERVER_DIR}/cmd/migrate/main.go" db $1 $2
+dotenv -e "${ENV_FILE}" go run "${SERVER_DIR}/cmd/migrate/main.go" db $1 $2
