@@ -2,6 +2,7 @@ import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Form } from "../components/Form";
 import { Timeline } from "../components/Timeline";
+import { Pagination } from "@mui/material";
 
 export const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -35,6 +36,7 @@ export const Home = () => {
     >
       <Form onSubmitted={onSubmitted} />
       <Timeline posts={posts} isLoading={isLoading} fetchPosts={fetchPosts} />
+      <Pagination count={10} size="large" />
     </Container>
   );
 };
