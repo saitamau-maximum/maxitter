@@ -25,7 +25,7 @@ const MIGRATION_TABLE = "bun_migrations"
 
 func main() {
 	config := config.NewConfig()
-
+	config.MYSQL_HOST = "localhost"
 	db, err := infra.ConnectDB(config)
 	if err != nil {
 		panic(err)
