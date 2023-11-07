@@ -1,61 +1,51 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
+	"github.com/uptrace/bun"
+
+	infra "github.com/saitamau-maximum/maxitter/backend/infra/mysql"
+	repo "github.com/saitamau-maximum/maxitter/backend/infra/repository"
+	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
 )
+
+const IMAGES_DIR = "./public/images"
+
+type Container struct {
+	DB             *bun.DB
+	PostRepository *repo.PostRepository
+	UserRepository *repo.UserRepository
+}
 
 type Handler struct {
-	DB     *sqlx.DB
-	Logger echo.Logger
-}
-
-var (
-	SQL_PATH   = "./sql"
-	IMAGES_DIR = "./public/images"
-)
-
-func getEnv(key, fallback string) string {
-	value, ok := os.LookupEnv(key)
-	if !ok {
-		value = fallback
-	}
-	return value
-}
-
-func connectDB() *sqlx.DB {
-	user := getEnv("MYSQL_USER", "user")
-	password := getEnv("MYSQL_PASSWORD", "password")
-	host := getEnv("MYSQL_HOST", "database")
-	port := getEnv("MYSQL_PORT", "3306")
-	dbname := getEnv("MYSQL_DATABASE", "db")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbname)
-
-	con, err := sqlx.Connect("mysql", dsn)
-	if err != nil {
-		panic(err)
-	}
-	return con
+	Container *Container
+	Logger    echo.Logger
 }
 
 func init() {
-	migrate()
+	// migrate()
 }
 
 func main() {
 	e := echo.New()
 	e.Debug = true
 	e.Logger.SetLevel(0)
-	db := connectDB()
+	db := infra.ConnectDB()
 	defer db.Close()
-	h := &Handler{DB: db, Logger: e.Logger}
+
+	container := Container{
+		DB:             db,
+		PostRepository: repo.NewPostRepository(db),
+		UserRepository: repo.NewUserRepository(db),
+	}
+
+	h := &Handler{Container: &container, Logger: e.Logger}
+
 	api := e.Group("/api")
 	api.GET("/posts", h.GetPosts)
 	api.POST("/posts", h.CreatePost)
@@ -79,8 +69,8 @@ func (h *Handler) GetPosts(c echo.Context) error {
 	}
 
 	index := page * 20
-	posts := []Post{}
-	err = h.DB.Select(&posts, "SELECT * FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?", index)
+
+	posts, err := h.Container.PostRepository.GetRecentPosts(c.Request().Context(), int(index))
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
@@ -94,15 +84,15 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	post := new(Post)
+	post := new(entity.Post)
 	if err := c.Bind(post); err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	post.ID = id.String()
-	post.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+	post.ID = id.ID()
+	post.CreatedAt = time.Now()
 
-	_, err = h.DB.Exec("INSERT INTO posts (id, body, created_at) VALUES (?, ?, ?)", post.ID, post.Body, post.CreatedAt)
+	_, err = h.Container.PostRepository.Create(post)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
@@ -111,8 +101,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 }
 
 func (h *Handler) GetUsers(c echo.Context) error {
-	users := []User{}
-	err := h.DB.Select(&users, "SELECT * FROM users")
+	users, err := h.Container.UserRepository.List(c.Request().Context())
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
@@ -126,16 +115,16 @@ func (h *Handler) CreateUser(c echo.Context) error {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	user := new(User)
+	user := new(entity.User)
 	if err := c.Bind(user); err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	user.ID = id.String()
-	user.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
-	user.UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
+	user.ID = id.ID()
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 
-	_, err = h.DB.Exec("INSERT INTO users (id, username, created_at, updated_at, profile_image_url, bio) VALUES (?, ?, ?, ?, ?, ?)", user.ID, user.Name, user.CreatedAt, user.UpdatedAt, user.ProfileImageURL, user.Bio)
+	_, err = h.Container.UserRepository.Create(user)
 	if err != nil {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
