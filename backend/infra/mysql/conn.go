@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/saitamau-maximum/maxitter/backend/config"
 )
 
@@ -16,15 +17,17 @@ func ConnectDB(cfg *config.Config) (*sql.DB, error) {
 	port := cfg_mysql.MYSQL_PORT
 	dbname := cfg_mysql.MYSQL_DATABASE
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		user,
-		password,
-		host,
-		port,
-		dbname,
-	)
+	c := mysql.Config{
+		User:                 user,
+		Passwd:               password,
+		Net:                  "tcp",
+		Addr:                 fmt.Sprintf("%s:%s", host, port),
+		DBName:               dbname,
+		AllowNativePasswords: true,
+		ParseTime:            true,
+	}
 
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("mysql", c.FormatDSN())
 	if err != nil {
 		return nil, err
 	}
