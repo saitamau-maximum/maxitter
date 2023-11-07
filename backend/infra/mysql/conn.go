@@ -25,6 +25,7 @@ func ConnectDB(cfg *config.Config) (*sql.DB, error) {
 		DBName:               dbname,
 		AllowNativePasswords: true,
 		ParseTime:            true,
+		Collation:            "utf8mb4_unicode_ci",
 	}
 
 	db, err := sql.Open("mysql", c.FormatDSN())
