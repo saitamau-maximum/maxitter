@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	ID              uint32    `bun:"id" json:"id"`
+	ID              string    `bun:"id" json:"id"`
 	Name            string    `bun:"username" json:"name"`
 	ProfileImageURL string    `bun:"profile_image_url" json:"profile_image_url"`
 	Bio             string    `bun:"bio" json:"bio"`
@@ -13,7 +13,7 @@ type User struct {
 	UpdatedAt       time.Time `bun:"updated_at" json:"updated_at"`
 }
 
-func NewUserEntity(id uint32, name, profileImageURL, bio string, createdAt, updatedAt time.Time) *User {
+func NewUserEntity(id string, name, profileImageURL, bio string, createdAt, updatedAt time.Time) *User {
 	return &User{
 		ID:              id,
 		Name:            name,

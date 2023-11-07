@@ -18,7 +18,7 @@ func NewUserRepository(db *bun.DB) *UserRepository {
 	}
 }
 
-func (r *UserRepository) Create(e *entity.User) (uint32, error) {
+func (r *UserRepository) Create(e *entity.User) (string, error) {
 	_, err := r.db.NewInsert().Model(e).Exec(context.Background())
 	if err != nil {
 		return e.ID, err

@@ -18,7 +18,7 @@ func NewPostRepository(db *bun.DB) *PostRepository {
 	}
 }
 
-func (r *PostRepository) Create(e *entity.Post) (uint32, error) {
+func (r *PostRepository) Create(e *entity.Post) (string, error) {
 	_, err := r.db.NewInsert().Model(e).Exec(context.Background())
 	if err != nil {
 		return e.ID, err

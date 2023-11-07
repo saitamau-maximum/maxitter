@@ -99,7 +99,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	post.ID = id.ID()
+	post.ID = id.String()
 	post.CreatedAt = time.Now()
 
 	_, err = h.Container.PostRepository.Create(post)
@@ -130,7 +130,7 @@ func (h *Handler) CreateUser(c echo.Context) error {
 		h.Logger.Error(err)
 		return c.JSON(500, err)
 	}
-	user.ID = id.ID()
+	user.ID = id.String()
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
