@@ -18,8 +18,8 @@ func NewPostRepository(db *bun.DB) *PostRepository {
 	}
 }
 
-func (r *PostRepository) Create(e *entity.Post) (string, error) {
-	_, err := r.db.NewInsert().Model(e).Exec(context.Background())
+func (r *PostRepository) Create(ctx context.Context, e *entity.Post) (string, error) {
+	_, err := r.db.NewInsert().Model(e).Exec(ctx)
 	if err != nil {
 		return e.ID, err
 	}
@@ -35,9 +35,9 @@ func (r *PostRepository) Find(ctx context.Context, id int) (*entity.Post, error)
 	return post, nil
 }
 
-func (r *PostRepository) GetRecentPosts(ctx context.Context, count int) ([]*entity.Post, error) {
+func (r *PostRepository) GetRecentPosts(ctx context.Context, count, offset int) ([]*entity.Post, error) {
 	var posts []*entity.Post
-	err := r.db.NewSelect().Model(&posts).Order("created_at DESC").Limit(10).Offset(count).Scan(ctx)
+	err := r.db.NewSelect().Model(&posts).Order("created_at DESC").Limit(count).Offset(offset).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -18,15 +18,15 @@ func NewUserRepository(db *bun.DB) *UserRepository {
 	}
 }
 
-func (r *UserRepository) Create(e *entity.User) (string, error) {
-	_, err := r.db.NewInsert().Model(e).Exec(context.Background())
+func (r *UserRepository) Create(ctx context.Context, e *entity.User) (string, error) {
+	_, err := r.db.NewInsert().Model(e).Exec(ctx)
 	if err != nil {
 		return e.ID, err
 	}
 	return e.ID, nil
 }
 
-func (r *UserRepository) Find(ctx context.Context, id uint32) (*entity.User, error) {
+func (r *UserRepository) Find(ctx context.Context, id string) (*entity.User, error) {
 	user := &entity.User{}
 	err := r.db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
 	if err != nil {
@@ -44,7 +44,7 @@ func (r *UserRepository) List(ctx context.Context) ([]*entity.User, error) {
 	return users, nil
 }
 
-func (r *UserRepository) Delete(ctx context.Context, id uint32) error {
+func (r *UserRepository) Delete(ctx context.Context, id string) error {
 	_, err := r.db.NewDelete().Model(&entity.User{}).Where("id = ?", id).Exec(ctx)
 	if err != nil {
 		return err
