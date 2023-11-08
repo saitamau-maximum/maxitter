@@ -75,7 +75,7 @@ func InitRouter(cfg *config.Config, bunDB *bun.DB) *echo.Echo {
 		userGroup.GET(relativePath, handler.FindAllUsers())
 		// /users/new
 		relativePath = createUserAPIRelative
-		userGroup.GET(relativePath, handler.CreateUser())
+		userGroup.POST(relativePath, handler.CreateUser())
 	}
 
 	postGroup := apiGroup.Group(postsAPIRoot)
