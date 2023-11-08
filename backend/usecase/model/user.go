@@ -5,7 +5,7 @@ import (
 
 	"github.com/uptrace/bun"
 
-	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
+	"github.com/saitamau-maximum/maxitter/backend/domain/entity"
 )
 
 type User struct {
