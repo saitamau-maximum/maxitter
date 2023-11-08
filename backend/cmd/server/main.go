@@ -1,22 +1,28 @@
 package main
 
 import (
-	"strconv"
+	"context"
+	"log"
+	"net/http"
+	"os/signal"
+	"syscall"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 
+	adapterHTTP "github.com/saitamau-maximum/maxitter/backend/adapter/http"
 	"github.com/saitamau-maximum/maxitter/backend/config"
 	infra "github.com/saitamau-maximum/maxitter/backend/infra/mysql"
 	repo "github.com/saitamau-maximum/maxitter/backend/infra/repository"
-	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
 )
 
-const IMAGES_DIR = "./public/images"
+const (
+	PORT       = "8000"
+	IMAGES_DIR = "./public/images"
+)
 
 type Container struct {
 	DB             *bun.DB
@@ -29,115 +35,52 @@ type Handler struct {
 	Logger    echo.Logger
 }
 
-func init() {
-	// migrate()
-}
-
 func main() {
-	e := echo.New()
-	e.Debug = true
-	e.Logger.SetLevel(0)
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
-	config := config.NewConfig()
+	cfg := config.NewConfig()
 
-	db, err := infra.ConnectDB(config)
-	if err != nil {
-		panic(err)
-	}
-
-	bunDB := bun.NewDB(db, mysqldialect.New())
+	mySQLConn, err := infra.ConnectDB(cfg)
+	bunDB := bun.NewDB(mySQLConn, mysqldialect.New())
 	defer bunDB.Close()
 
-	container := Container{
-		DB:             bunDB,
-		PostRepository: repo.NewPostRepository(bunDB),
-		UserRepository: repo.NewUserRepository(bunDB),
+	router := adapterHTTP.InitRouter(cfg, bunDB)
+
+	srv := &http.Server{
+		Addr:           ":" + PORT,
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
 	}
 
-	h := &Handler{Container: &container, Logger: e.Logger}
+	go func() {
+		log.Println("server is running! addr: ", ":"+PORT)
 
-	api := e.Group("/api")
-	api.GET("/posts", h.GetPosts)
-	api.POST("/posts", h.CreatePost)
-	api.GET("/health", func(c echo.Context) error {
-		e.Logger.Info("health check")
-		return c.JSON(200, "ok")
-	})
-	api.GET("/users", h.GetUsers)
-	api.POST("/users/new", h.CreateUser)
-	e.Logger.Fatal(e.Start(":8000"))
-}
+		if err != nil {
+			log.Fatalf("Failed to connect to MySQL: %+v", err)
+		}
 
-func (h *Handler) GetPosts(c echo.Context) error {
-	pageParam := c.QueryParam("page")
-	if pageParam == "" {
-		pageParam = "0"
-	}
-	page, err := strconv.ParseUint(pageParam, 10, 0)
-	if err != nil {
-		return c.JSON(400, err)
+		if err := srv.ListenAndServe(); err != nil {
+			log.Fatalf("Failed to listen and serve: %+v", err)
+		}
+	}()
+
+	// Listen for the interrupt signal.
+	<-ctx.Done()
+
+	// Restore default behavior on the interrupt signal and notify user of shutdown.
+	stop()
+	log.Println("shutting down gracefully, press Ctrl+C again to force")
+
+	// The context is used to inform the server it has 5 seconds to finish
+	// the request it is currently handling
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server forced to shutdown: ", err)
 	}
 
-	index := page * 20
-
-	posts, err := h.Container.PostRepository.GetRecentPosts(c.Request().Context(), int(index))
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	return c.JSON(200, posts)
-}
-
-func (h *Handler) CreatePost(c echo.Context) error {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	post := new(entity.Post)
-	if err := c.Bind(post); err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	post.ID = id.String()
-	post.CreatedAt = time.Now()
-
-	_, err = h.Container.PostRepository.Create(post)
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	return c.JSON(200, post)
-}
-
-func (h *Handler) GetUsers(c echo.Context) error {
-	users, err := h.Container.UserRepository.List(c.Request().Context())
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	return c.JSON(200, users)
-}
-
-func (h *Handler) CreateUser(c echo.Context) error {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	user := new(entity.User)
-	if err := c.Bind(user); err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	user.ID = id.String()
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
-
-	_, err = h.Container.UserRepository.Create(user)
-	if err != nil {
-		h.Logger.Error(err)
-		return c.JSON(500, err)
-	}
-	return c.JSON(200, user)
+	log.Println("Server exiting")
 }
