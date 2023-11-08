@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
+	"github.com/saitamau-maximum/maxitter/backend/domain/entity"
 	"github.com/uptrace/bun"
 )
 
