@@ -3,51 +3,63 @@ package repository
 import (
 	"context"
 
+	"github.com/saitamau-maximum/maxitter/backend/domain/entity"
+	"github.com/saitamau-maximum/maxitter/backend/domain/repository"
+	"github.com/saitamau-maximum/maxitter/backend/usecase/model"
 	"github.com/uptrace/bun"
-
-	"github.com/saitamau-maximum/maxitter/backend/internal/entity"
 )
 
 type UserRepository struct {
-	db *bun.DB
+	DB *bun.DB
 }
 
-func NewUserRepository(db *bun.DB) *UserRepository {
-	return &UserRepository{
-		db,
-	}
+func NewUserRepository(db *bun.DB) repository.IUserService {
+	return &UserRepository{DB: db}
 }
 
-func (r *UserRepository) Create(ctx context.Context, e *entity.User) (string, error) {
-	_, err := r.db.NewInsert().Model(e).Exec(ctx)
-	if err != nil {
-		return e.ID, err
-	}
-	return e.ID, nil
-}
-
-func (r *UserRepository) Find(ctx context.Context, id string) (*entity.User, error) {
-	user := &entity.User{}
-	err := r.db.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
+func (r *UserRepository) GetAll(ctx context.Context) (entity.UserSlice, error) {
+	var modelUsers []model.User
+	err := r.DB.NewSelect().Model(&modelUsers).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
-}
 
-func (r *UserRepository) List(ctx context.Context) ([]*entity.User, error) {
-	var users []*entity.User
-	err := r.db.NewSelect().Model(&users).Scan(ctx)
-	if err != nil {
-		return nil, err
+	var users entity.UserSlice
+	for _, u := range modelUsers {
+		users = append(users, u.ToUserEntity())
 	}
+
 	return users, nil
 }
 
-func (r *UserRepository) Delete(ctx context.Context, id string) error {
-	_, err := r.db.NewDelete().Model(&entity.User{}).Where("id = ?", id).Exec(ctx)
+func (r *UserRepository) GetByID(ctx context.Context, id string) (*entity.User, error) {
+	user := &model.User{}
+	err := r.DB.NewSelect().Model(user).Where("id = ?", id).Scan(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return user.ToUserEntity(), nil
+}
+func (r *UserRepository) Create(ctx context.Context, user *entity.User) (*entity.User, error) {
+	modelUser := &model.User{
+		ID:           user.ID,
+		Name:         user.Name,
+		ProfileImage: user.ProfileImageURL,
+		Bio:          user.Bio,
+		CreatedAt:    user.CreatedAt,
+		UpdatedAt:    user.UpdatedAt,
+	}
+
+	_, err := r.DB.NewInsert().Model(modelUser).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return modelUser.ToUserEntity(), nil
+}
+
+func (r *UserRepository) Delete(ctx context.Context, id string) error {
+	user := &model.User{ID: id}
+	_, err := r.DB.NewDelete().Model(user).Where("id = ?", id).Exec(ctx)
+	return err
 }
