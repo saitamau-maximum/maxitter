@@ -10,6 +10,8 @@ type Post struct {
 	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
+type PostSlice []*Post
+
 func NewPostEntity(id string, body string, createdAt time.Time) *Post {
 	return &Post{
 		ID:        id,
