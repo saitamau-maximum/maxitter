@@ -48,12 +48,12 @@ func (h *Handler) CreatePost(c echo.Context) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		h.Logger.Error(err)
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	post := new(model.Post)
 	if err := c.Bind(post); err != nil {
 		h.Logger.Error(err)
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	post.ID = id.String()
 	post.CreatedAt = time.Now().Round(time.Millisecond)
@@ -89,12 +89,12 @@ func (h *Handler) CreateUser(c echo.Context) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		h.Logger.Error(err)
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	user := new(model.User)
 	if err := c.Bind(user); err != nil {
 		h.Logger.Error(err)
-		return c.JSON(500, err)
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	user.ID = id.String()
 
