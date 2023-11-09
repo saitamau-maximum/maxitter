@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -38,8 +37,6 @@ func (h *Handler) GetPosts(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
-	fmt.Printf("%#v\n", modelPosts)
 
 	return c.JSON(http.StatusOK, modelPosts)
 }
