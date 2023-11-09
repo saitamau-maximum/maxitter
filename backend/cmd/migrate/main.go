@@ -37,14 +37,11 @@ func connectDB() (*sql.DB, error) {
 	dbname := getEnv("MYSQL_DATABASE", "db")
 
 	c := mysql.Config{
-		User:                 user,
-		Passwd:               password,
-		Net:                  "tcp",
-		Addr:                 fmt.Sprintf("%s:%s", host, port),
-		DBName:               dbname,
-		AllowNativePasswords: true,
-		ParseTime:            true,
-		Collation:            "utf8mb4_unicode_ci",
+		User:   user,
+		Passwd: password,
+		Net:    "tcp",
+		Addr:   fmt.Sprintf("%s:%s", host, port),
+		DBName: dbname,
 	}
 
 	db, err := sql.Open("mysql", c.FormatDSN())
