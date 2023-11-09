@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -31,11 +32,14 @@ func (h *Handler) GetPosts(c echo.Context) error {
 
 	ctx := c.Request().Context()
 
-	var modelPosts []model.Post
+	modelPosts := []model.Post{}
+
 	err = h.DB.NewSelect().Model(&modelPosts).Order("created_at DESC").Limit(20).Offset(int(index)).Scan(ctx)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	fmt.Printf("%#v\n", modelPosts)
 
 	return c.JSON(http.StatusOK, modelPosts)
 }
@@ -72,7 +76,7 @@ func (h *Handler) CreatePost(c echo.Context) error {
 func (h *Handler) GetUsers(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	var modelUsers []model.User
+	modelUsers := []model.User{}
 	err := h.DB.NewSelect().Model(&modelUsers).Scan(ctx)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
