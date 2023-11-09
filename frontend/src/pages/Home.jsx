@@ -22,7 +22,6 @@ export const Home = () => {
       return;
     }
     setPosts(data.posts); // 投稿データをセット
-    setpostCount(data.count); // 投稿件数をセット
     setIsLoading(false);
 };
 
@@ -38,6 +37,7 @@ const fetchAmountPost = async () => {
 
   useEffect(() => {
     fetchPosts();
+    fetchAmountPost();
   }, []);
 
   return (

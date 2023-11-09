@@ -172,15 +172,10 @@ func (h *Handler) GetPosts(c echo.Context) error {
         return c.JSON(500, err)
     }
 
-    // 投稿件数を取得
-    count := len(posts)
-
     response := struct {
         Posts []Post `json:"posts"`
-        Count int    `json:"count"`
     }{
         Posts: posts,
-        Count: count,
     }
 
     return c.JSON(200, response)
