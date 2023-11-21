@@ -2,10 +2,13 @@ import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Form } from "../components/Form";
 import { Timeline } from "../components/Timeline";
+import { UserSelectBox } from "../components/UserSelectBox";
 
 export const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState('');//現在選択されているユーザーidを保持する変数
   const onSubmitted = (post) => {
     setPosts([post, ...posts]);
   };
@@ -22,8 +25,23 @@ export const Home = () => {
     setIsLoading(false);
   };
 
+  const fetchUsers = async () =>{
+    const res = await fetch("/api/users");
+    if(res.ok){
+      const data = await res.json();
+      setUsers(data);
+    } else{
+      console.error(data);
+    }
+  }
+  //セレクトボックスの人が変更されたときに呼ばれるハンドラ関数
+  const handleChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
   useEffect(() => {
     fetchPosts();
+    fetchUsers();
   }, []);
 
   return (
@@ -33,8 +51,21 @@ export const Home = () => {
         py: 3,
       }}
     >
-      <Form onSubmitted={onSubmitted} />
-      <Timeline posts={posts} isLoading={isLoading} fetchPosts={fetchPosts} />
+      <UserSelectBox
+        users={users}
+        selectedUser={selectedUser}
+        handleChange={handleChange}
+      />
+      <Form 
+        onSubmitted={onSubmitted} 
+        selectedUser={selectedUser}
+      />
+      <Timeline 
+        posts={posts} 
+        isLoading={isLoading} 
+        fetchPosts={fetchPosts} 
+      />
+
     </Container>
   );
 };
