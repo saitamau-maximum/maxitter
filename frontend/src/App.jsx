@@ -1,6 +1,6 @@
 import { CssBaseline } from "@mui/material";
 import { GlobalStyles } from "@mui/material";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,Link } from "react-router-dom";
 import { Header } from "./components/Header";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
@@ -24,7 +24,7 @@ function App() {
         <Router>
           <Routes>
             <Route exact path="/" element={<Home />}></Route>
-            <Route path="/Assign" component={<Assign />} />
+            <Route  path="/Assign" element={<Assign />}></Route>
           </Routes>
         </Router>
       </ColorModeProvider>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Form } from "../components/Form";
 import { Timeline } from "../components/Timeline";
 import { UserSelectBox } from "../components/UserSelectBox";
+import { Link } from "react-router-dom";
 
 export const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -51,6 +52,9 @@ export const Home = () => {
         py: 3,
       }}
     >
+      <div>
+        <Link to={"/Assign"}>ユーザー登録</Link>
+      </div>
       <UserSelectBox
         users={users}
         selectedUser={selectedUser}

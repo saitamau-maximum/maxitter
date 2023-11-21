@@ -1,12 +1,15 @@
+import { Container, nativeSelectClasses } from "@mui/material";
 import { Box, Button, FormLabel, TextField } from "@mui/material";
 import { useState } from "react";
-//方針　とりあえずApp.jsxに追加して機能を試す
+import { Navigate, useNavigate } from "react-router-dom";
+
 export const Assign = () => {
     const [name, setName] = useState("");
     const [profileURL, setProfileURL] = useState("");
     const [bio, setBio] = useState("");
     const [isSending, setIsSending] = useState(false);//一応書いておくが、連続して登録はしない気がするので後で考える。
 
+    const navigate = useNavigate();
     const sendPost = async (e) => {
         e.preventDefault();
         setIsSending(true);
@@ -21,13 +24,20 @@ export const Assign = () => {
         setName("");
         setProfileURL("");
         setBio(""); 
-        if (res.ok) {
-          onSubmitted(await res.json());//ここを見ると、もしやonSubmittedが必要？
+        
+        if(res.ok){
+          navigate("/");
         }
       };
 
       return (
         <>
+          <Container
+            maxWidth="md"
+            sx={{
+              py: 3,
+            }}
+          >
           <form onSubmit={sendPost}>
             <FormLabel htmlFor="body">ユーザー登録</FormLabel>
             
@@ -73,7 +83,9 @@ export const Assign = () => {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
             />
+            
             <Box textAlign="center" m={3}>
+            
               <Button
                 type="submit"
                 variant="contained"
@@ -82,8 +94,11 @@ export const Assign = () => {
               >
                 登録する
               </Button>
+              
             </Box>
+            
           </form>
+          </Container>
         </>
       );
-}
+};
