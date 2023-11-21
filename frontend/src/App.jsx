@@ -23,7 +23,7 @@ function App() {
         />
         <Router>
           <Routes>
-            <Route path="/" element={<Home />}></Route>
+            <Route exact path="/" element={<Home />}></Route>
             <Route path="/Assign" component={<Assign />} />
           </Routes>
         </Router>
