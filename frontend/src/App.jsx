@@ -5,6 +5,7 @@ import { Header } from "./components/Header";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 import { Home } from "./pages/Home.jsx";
+import { Assign } from "./pages/Assign.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/Assign" component={<Assign />} />
           </Routes>
         </Router>
       </ColorModeProvider>
