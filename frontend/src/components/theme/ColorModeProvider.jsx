@@ -18,7 +18,7 @@ export const ColorModeProvider = ({ children }) => {
         setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
       },
     }),
-    []
+    [],
   );
 
   const theme = useMemo(
@@ -28,7 +28,7 @@ export const ColorModeProvider = ({ children }) => {
           mode,
         },
       }),
-    [mode]
+    [mode],
   );
 
   return (
