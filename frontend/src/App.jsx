@@ -5,7 +5,7 @@ import { Header } from "./components/Header";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 import { Home } from "./pages/Home.jsx";
-import { Assign } from "./pages/Assign.jsx";
+import { Registration } from "./pages/Registration.jsx";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Router>
           <Routes>
             <Route exact path="/" element={<Home />}></Route>
-            <Route  path="/Assign" element={<Assign />}></Route>
+            <Route  path="/Registration" element={<Registration />}></Route>
           </Routes>
         </Router>
       </ColorModeProvider>

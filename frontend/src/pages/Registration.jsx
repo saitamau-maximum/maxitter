@@ -1,18 +1,20 @@
-import { Container, nativeSelectClasses } from "@mui/material";
+import { Container, Snackbar } from "@mui/material";
 import { Box, Button, FormLabel, TextField } from "@mui/material";
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const Assign = () => {
+export const Registration = () => {
     const [name, setName] = useState("");
     const [profileURL, setProfileURL] = useState("");
     const [bio, setBio] = useState("");
-    const [isSending, setIsSending] = useState(false);//一応書いておくが、連続して登録はしない気がするので後で考える。
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const navigate = useNavigate();
+    const handleCloseSnackbar = () =>{
+      setSnackbarOpen(false);
+    };
     const sendPost = async (e) => {
         e.preventDefault();
-        setIsSending(true);
         const res = await fetch(`/api/users/new`, {
           method: "POST",
           body: JSON.stringify({ name, profileURL, bio }),
@@ -20,13 +22,18 @@ export const Assign = () => {
             "Content-Type": "application/json",
           },
         });
-        setIsSending(false);
         setName("");
         setProfileURL("");
         setBio(""); 
         
         if(res.ok){
-          navigate("/");
+          setSnackbarOpen(true);
+
+          setTimeout(() => {
+            setSnackbarOpen(false);
+            navigate("/");
+          },2000);
+          
         }
       };
 
@@ -58,7 +65,6 @@ export const Assign = () => {
             <TextField 
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               multiline
               rows={1}
@@ -72,7 +78,6 @@ export const Assign = () => {
              <TextField 
               variant="outlined"
               margin="normal"
-              required
               fullWidth
               multiline
               rows={4}
@@ -90,7 +95,7 @@ export const Assign = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={ !name && !bio }//ここの条件には後ですべてのボックスが空白でないことを追加する。
+                disabled={ !name  }
               >
                 登録する
               </Button>
@@ -98,6 +103,13 @@ export const Assign = () => {
             </Box>
             
           </form>
+
+          <Snackbar
+            open = {snackbarOpen}
+            autoHideDuration={2000}
+            onClose = {handleCloseSnackbar}
+            message="登録完了しました"
+          />
           </Container>
         </>
       );
