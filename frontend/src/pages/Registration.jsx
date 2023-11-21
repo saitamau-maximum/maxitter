@@ -105,6 +105,10 @@ export const Registration = () => {
           </form>
 
           <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
             open = {snackbarOpen}
             autoHideDuration={2000}
             onClose = {handleCloseSnackbar}
