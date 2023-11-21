@@ -12,13 +12,15 @@ export const Assign = () => {
         setIsSending(true);
         const res = await fetch(`/api/users/new`, {
           method: "POST",
-          body: JSON.stringify({ name:name, profileURL:profileURL, bio:bio }),//ひとまず省略せずに書く
+          body: JSON.stringify({ name, profileURL, bio }),
           headers: {
             "Content-Type": "application/json",
           },
         });
         setIsSending(false);
-        //setBody("");  登録後の挙動は後で考える。
+        setName("");
+        setProfileURL("");
+        setBio(""); 
         if (res.ok) {
           onSubmitted(await res.json());//ここを見ると、もしやonSubmittedが必要？
         }
@@ -76,7 +78,7 @@ export const Assign = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={ !name && !profileURL && !bio }//ここの条件には後ですべてのボックスが空白でないことを追加する。
+                disabled={ !name && !bio }//ここの条件には後ですべてのボックスが空白でないことを追加する。
               >
                 登録する
               </Button>
