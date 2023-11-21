@@ -3,6 +3,7 @@ import { GlobalStyles } from "@mui/material";
 import { Form } from "./components/Form";
 import { Timeline } from "./components/Timeline";
 import { UserSelectBox } from "./components/UserSelectBox";
+import { Assign } from "./components/Assign";
 import { useEffect, useState } from "react";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
@@ -79,6 +80,7 @@ function App() {
             isLoading={isLoading}
             fetchPosts={fetchPosts}
           />
+          <Assign/>
         </Container>
       </ColorModeProvider>
     </>
