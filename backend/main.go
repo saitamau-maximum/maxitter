@@ -135,7 +135,7 @@ func sendPostWebhookDiscord(post *Post) error {
 					Name: "匿名のユーザー",
 					Icon: DISCORD_AVATAR_URL,
 				},
-				TimeStamp: post.CreatedAt.String(),
+				TimeStamp: post.CreatedAt.Format(time.RFC3339), // ISO8601形式にフォーマット
 			},
 		},
 	}
