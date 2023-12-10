@@ -24,7 +24,7 @@ function App() {
         <Router>
           <Routes>
             <Route exact path="/" element={<Home />}></Route>
-            <Route  path="/Registration" element={<Registration />}></Route>
+            <Route  path="/registration" element={<Registration />}></Route>
           </Routes>
         </Router>
       </ColorModeProvider>

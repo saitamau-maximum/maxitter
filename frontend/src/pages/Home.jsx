@@ -53,7 +53,7 @@ export const Home = () => {
       }}
     >
       <div>
-        <Link to={"/Registration"}>ユーザー登録</Link>
+        <Link to={"/registration"}>ユーザー登録</Link>
       </div>
       <UserSelectBox
         users={users}
