@@ -11,7 +11,7 @@ function App() {
     <>
       <ColorModeProvider>
         <CssBaseline />
-        <Header />
+        <Header/>
         <ToggleTheme />
         <GlobalStyles
           styles={{
