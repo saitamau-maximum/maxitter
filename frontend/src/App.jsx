@@ -1,10 +1,11 @@
 import { CssBaseline } from "@mui/material";
 import { GlobalStyles } from "@mui/material";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,Link } from "react-router-dom";
 import { Header } from "./components/Header";
 import { ColorModeProvider } from "./components/theme/ColorModeProvider.jsx";
 import { ToggleTheme } from "./components/theme/ToggleTheme.jsx";
 import { Home } from "./pages/Home.jsx";
+import { Registration } from "./pages/Registration.jsx";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         />
         <Router>
           <Routes>
-            <Route path="/" element={<Home />}></Route>
+            <Route exact path="/" element={<Home />}></Route>
+            <Route  path="/registration" element={<Registration />}></Route>
           </Routes>
         </Router>
       </ColorModeProvider>
