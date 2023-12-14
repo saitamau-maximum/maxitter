@@ -4,7 +4,7 @@ FROM golang:1.20-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go mod download
-RUN CGO_ENABLED=0 go build -o main .
+RUN CGO_ENABLED=0 go build -o main ./cmd/server/main.go
 
 
 FROM alpine AS prod
