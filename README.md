@@ -92,19 +92,24 @@ backend 配下は次のようなディレクトリとファイルで構成され
 これらの操作は、`scripts/migrator.sh`を使用して行います。詳細な手順は以下の通りです。
 
 1. **モデルの作成**: `model`ディレクトリに新しいGoファイルを作成します。このファイルには、新しいテーブルを表すGoの構造体を定義します。
+
 2. **マイグレーションの作成:**: `./scripts/migrator.sh create_go <任意のコメント>`を実行して、マイグレーション用のGoファイルを作成します。コメントはGitのコミットメッセージのように、「create users table」などと更新内容が分かりやすいと良いです。実行すると、`migrations`ディレクトリに日時と指定したコメントが合わさったような名前のGoファイルが作成されます。例えば、 `./scripts/migrator.sh create_go create initial tables` を実行して`migrations`ディレクトリに`20231109002750_create_initial_tables.go`を作成しました。
+
 3. **マイグレーションの処理**: 作成されたGoファイルにマイグレーションの処理を書きます。例えば、`20231109002750_create_initial_tables.go`では以下のようなup migrationの処理を書いています。
-```go
-  _, err := db.NewCreateTable().Model((*model.Post)(nil)).Exec(ctx)
-  if err != nil {
+
+    ```go
+    _, err := db.NewCreateTable().Model((*model.Post)(nil)).Exec(ctx)
+    if err != nil {
+        return err
+    }
+    _, err = db.NewCreateTable().Model((*model.User)(nil)).Exec(ctx)
     return err
-  }
-  _, err = db.NewCreateTable().Model((*model.User)(nil)).Exec(ctx)
-  return err
-```
-これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理するときの処理を手動でup migrationに書く必要があります。
-また、down migrationの処理はup migrationの処理を逆にするように書きます。
-このようにすることでマイグレーションをロールバックすることができるようになるため、バージョン管理が容易になるというメリットがあります。
+    ```
+    
+    これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理するときの処理を手動でup migrationに書く必要があります。
+    また、down migrationの処理はup migrationの処理を逆にするように書きます。
+    このようにすることでマイグレーションをロールバックすることができるようになるため、バージョン管理が容易になるというメリットがあります。
+
 4. **マイグレーションの実行**: `./scripts/migrator.sh migrate`を実行して、新しいマイグレーションを適用します。
 
 以上の手順により、新しいカラムやテーブルをデータベースに追加することができます。
