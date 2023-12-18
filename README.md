@@ -107,7 +107,7 @@ backend 配下は次のようなディレクトリとファイルで構成され
     ```
     
     これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理するときの処理を手動でup migrationに書く必要があります。
-    また、down migrationの処理はup migrationの処理を逆にするように書きます。
+    また、down migrationの処理はup migrationの処理を完全に打ち消せるように書きます。例えば、テーブルを作成するup migrationの処理があるとすれば、テーブルを削除する処理がdown migrationになります。
     このようにすることでマイグレーションをロールバックすることができるようになるため、バージョン管理が容易になるというメリットがあります。
 
 4. **マイグレーションの実行**: `./scripts/migrator.sh migrate`を実行して、新しいマイグレーションを適用します。
