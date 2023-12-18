@@ -98,16 +98,30 @@ backend 配下は次のようなディレクトリとファイルで構成され
 3. **マイグレーションの処理**: 作成されたGoファイルにマイグレーションの処理を書きます。例えば、`20231109002750_create_initial_tables.go`では以下のようなup migrationの処理を書いています。
 
     ```go
+    fmt.Print(" [up migration] ")
     _, err := db.NewCreateTable().Model((*model.Post)(nil)).Exec(ctx)
     if err != nil {
-        return err
+      return err
     }
     _, err = db.NewCreateTable().Model((*model.User)(nil)).Exec(ctx)
     return err
     ```
     
     これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理するときの処理を手動でup migrationに書く必要があります。
-    また、down migrationの処理はup migrationの処理を完全に打ち消せるように書きます。例えば、テーブルを作成するup migrationの処理があるとすれば、テーブルを削除する処理がdown migrationになります。
+
+    また、down migrationの処理はup migrationの処理を完全に打ち消せるように書きます。
+    例えば、`20231109002750_create_initial_tables.go`ではup migrationで`posts`テーブルと`users`テーブルを作成します。よって、down migrationではこれらのテーブルを削除するような処理を書きます。
+
+    ```go
+    fmt.Print(" [down migration] ")
+		_, err := db.NewDropTable().Model((*model.Post)(nil)).IfExists().Exec(ctx)
+		if err != nil {
+			return err
+		}
+		_, err = db.NewDropTable().Model((*model.User)(nil)).IfExists().Exec(ctx)
+		return err
+    ```
+
     このようにすることでマイグレーションをロールバックすることができるようになるため、バージョン管理が容易になるというメリットがあります。
 
 4. **マイグレーションの実行**: `./scripts/migrator.sh migrate`を実行して、新しいマイグレーションを適用します。
