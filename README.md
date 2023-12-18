@@ -107,7 +107,7 @@ backend 配下は次のようなディレクトリとファイルで構成され
     return err
     ```
     
-    これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理するときの処理を手動でup migrationに書く必要があります。
+    これは`model/post.go`と`model/user.go`に定義されているモデルをデータベースに追加する処理です。このように、Bunのmigration機能では実際にアップデートの処理を手動でup migrationに書く必要があります。
 
     また、down migrationの処理はup migrationの処理を完全に打ち消せるように書きます。
     例えば、`20231109002750_create_initial_tables.go`ではup migrationで`posts`テーブルと`users`テーブルを作成します。よって、down migrationではこれらのテーブルを削除するような処理を書きます。
