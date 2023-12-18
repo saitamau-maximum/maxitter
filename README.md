@@ -114,12 +114,12 @@ backend 配下は次のようなディレクトリとファイルで構成され
 
     ```go
     fmt.Print(" [down migration] ")
-		_, err := db.NewDropTable().Model((*model.Post)(nil)).IfExists().Exec(ctx)
-		if err != nil {
-			return err
-		}
-		_, err = db.NewDropTable().Model((*model.User)(nil)).IfExists().Exec(ctx)
-		return err
+    _, err := db.NewDropTable().Model((*model.Post)(nil)).IfExists().Exec(ctx)
+    if err != nil {
+      return err
+    }
+    _, err = db.NewDropTable().Model((*model.User)(nil)).IfExists().Exec(ctx)
+    return err
     ```
 
     このようにすることでマイグレーションをロールバックすることができるようになるため、バージョン管理が容易になるというメリットがあります。
