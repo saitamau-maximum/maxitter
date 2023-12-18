@@ -93,7 +93,7 @@ backend 配下は次のようなディレクトリとファイルで構成され
 
 1. **モデルの作成**: `model`ディレクトリに新しいGoファイルを作成します。このファイルには、新しいテーブルを表すGoの構造体を定義します。
 
-2. **マイグレーションの作成:**: `./scripts/migrator.sh create_go <任意のコメント>`を実行して、マイグレーション用のGoファイルを作成します。コメントはGitのコミットメッセージのように、「create users table」などと更新内容が分かりやすいと良いです。実行すると、`migrations`ディレクトリに日時と指定したコメントが合わさったような名前のGoファイルが作成されます。例えば、 `./scripts/migrator.sh create_go create initial tables` を実行して`migrations`ディレクトリに`20231109002750_create_initial_tables.go`を作成しました。
+2. **マイグレーションの作成**: `./scripts/migrator.sh create_go <任意のコメント>`を実行して、マイグレーション用のGoファイルを作成します。コメントはGitのコミットメッセージのように、「create users table」などと更新内容が分かりやすいと良いです。実行すると、`migrations`ディレクトリに日時と指定したコメントが合わさったような名前のGoファイルが作成されます。例えば、 `./scripts/migrator.sh create_go create initial tables` を実行して`migrations`ディレクトリに`20231109002750_create_initial_tables.go`を作成しました。
 
 3. **マイグレーションの処理**: 作成されたGoファイルにマイグレーションの処理を書きます。例えば、`20231109002750_create_initial_tables.go`では以下のようなup migrationの処理を書いています。
 
